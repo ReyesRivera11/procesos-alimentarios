@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.active {
+  color: #d86d26;
+}
+
+nav{
+  position: relative;
+  z-index: 100000;
+}
+
+/* styles/globals.css */
+.nextui-select-bordered {
+  border: none !important;
+}
