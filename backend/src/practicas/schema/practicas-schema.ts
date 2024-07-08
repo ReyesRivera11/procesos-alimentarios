@@ -38,7 +38,7 @@ export class Practicas {
         trim: true,
         required: true,
     })
-    semestre: string;
+    cuatrimestre: string;
 
     @Prop({
         trim: true,
@@ -62,7 +62,6 @@ export class Practicas {
         default: "ACTIVO",
     })
     estado: string;
-
    
 }
 

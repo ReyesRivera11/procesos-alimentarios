@@ -4,7 +4,7 @@ export class Practica {
     practica: string;
     profesor: Types.ObjectId;
     asignatura: Types.ObjectId;
-    semestre: string;
+    cuatrimestre: string;
     grupo: string;
     materiales:object[];
     fecha:string;

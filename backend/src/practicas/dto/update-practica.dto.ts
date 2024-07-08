@@ -44,7 +44,7 @@ export class UpdatePracticaDto extends PartialType(CreatePracticaDto) {
     @IsOptional()
     @MinLength(3)
     @MaxLength(20)
-    semestre:string;
+    cuatrimestre:string;
 
     @IsString()
     @IsOptional()

@@ -17,7 +17,7 @@ const NavBarAdmin = () => {
                 <img
                     src={Logo}
                     alt="logo"
-                    className='sm:flex hidden md:w-20 md:h-20 sm:w-full sm:h-full object-contain'
+                    className='sm:flex hidden md:w-20 md:h-20 sm:w-14 sm:h-14 object-contain'
                 />
                 <button className="flex sm:hidden" onClick={() => setFlag(true)}>
                     <GiHamburgerMenu className="text-white text-3xl" />

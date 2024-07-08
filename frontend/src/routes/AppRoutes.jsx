@@ -31,9 +31,14 @@ import AgregarEquiposTaller from '../pages/admin/equipos-taller/AgregarEquiposTa
 import EquiposLab from '../pages/admin/equiposlab/EquiposLab'
 import AgregarEquipoLab from '../pages/admin/equiposlab/AgregarEquipoLab'
 import ProtectedRouterAdmin from '../utils/ProtectedRouterAdmin'
+import WelcomeDocente from '../pages/docente/Welcome'
+import NavBarDocente from '../components/NavBarDocente'
+import CrearPractica from '../pages/docente/CrearPractica'
+import ProtectedRouterDocente from '../utils/ProtectedRouterDoocente'
 const AppRoutes = () => {
     const location = useLocation();
     const routesWithNavBarStudent = ["/inicio", "/cambiar-password", "/solicitar-material"];
+    const routesWithNavBarTeacher = ["/inicio-docente", "/crear-practica", "/solicitar-material"];
     const routesWithNavBarAdmin = ["/inicio-admin", "/prestamos", "/solicitudes", "/entregas", "/devoluciones", "/aditivos", "/alumnos", "/docentes", "/asignaturas", "/materialesLab", "/materialesAlmacen", "/agregar-aditivo", "/agregar-material-lab", "/agregar-material-alm", "/agregar-asignatura", "/agregar-docente", "/agregar-alumno","/equipos-taller","/agregar-equipo-taller","/equipos-lab","/agregar-equipo-lab"];
     return (
         <>
@@ -41,6 +46,7 @@ const AppRoutes = () => {
                 <Header />
                 {routesWithNavBarStudent.includes(location.pathname) && <NavBar />}
                 {routesWithNavBarAdmin.includes(location.pathname) && <NavBarAdmin />}
+                {routesWithNavBarTeacher.includes(location.pathname) && <NavBarDocente />}
             </div>
             <div className="mt-36">
                 <Routes>
@@ -71,6 +77,10 @@ const AppRoutes = () => {
                         <Route path='/equipos-lab' element={<EquiposLab />} />
                         <Route path='/agregar-equipo-lab' element={<AgregarEquipoLab />} />
                         <Route path='/agregar-equipo-taller' element={<AgregarEquiposTaller />} />
+                    </Route>
+                    <Route element={<ProtectedRouterDocente/>}>
+                        <Route path='/inicio-docente' element={<WelcomeDocente/>}/>
+                        <Route path='/crear-practica' element={<CrearPractica/>}/>
                     </Route>
                     <Route path='/' element={<Home />} />
                     <Route path='*' element={<NotFound />} />

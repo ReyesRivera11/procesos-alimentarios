@@ -40,7 +40,7 @@ export class CreatePracticaDto {
     @IsNotEmpty()
     @MinLength(3)
     @MaxLength(20)
-    semestre:string;
+    cuatrimestre:string;
 
     @IsString()
     @IsNotEmpty()

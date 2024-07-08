@@ -16,9 +16,11 @@ const Home = () => {
   const navigate = useNavigate();
   const onSubmit = handleSubmit(async (values) => {
     const res = await loginAlumno(values);
+    console.log(res)
     if (res) {
       res.role === "alumno" && navigate("/inicio");
       res.role === "admin" && navigate("/inicio-admin");
+      res.role === "docente" && navigate("/inicio-docente");
     }
   });
 
