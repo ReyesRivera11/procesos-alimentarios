@@ -16,7 +16,6 @@ const Home = () => {
   const navigate = useNavigate();
   const onSubmit = handleSubmit(async (values) => {
     const res = await loginAlumno(values);
-    console.log(res)
     if (res) {
       res.role === "alumno" && navigate("/inicio");
       res.role === "admin" && navigate("/inicio-admin");
@@ -36,11 +35,12 @@ const Home = () => {
             )
           }
         </div>
-        <form onSubmit={onSubmit} className="flex flex-col gap-5 my-5">
+        <form onSubmit={onSubmit} className="flex flex-col gap-5 my-5" autoComplete='off'>
           <Input
             type="text"
             label="Usuario"
-            variant='flat'
+            variant='bordered'
+            autoComplete='off'
             errorMessage={errors?.username?.message}
             isInvalid={errors.username ? true : false}
             {
@@ -54,7 +54,9 @@ const Home = () => {
           />
           <Input
             label="Contraseña"
-            variant="flat"
+            autoComplete='off'
+            className='autofill:disabled:'
+            variant="bordered"
             isInvalid={errors.password ? true : false}
             errorMessage={errors?.password?.message}
             endContent={

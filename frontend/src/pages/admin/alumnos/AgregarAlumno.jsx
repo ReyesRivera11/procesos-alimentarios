@@ -1,13 +1,10 @@
-import { styles } from "../../../assets/styles/global-styles"
 import { useForm } from "react-hook-form";
 import { Input, Select, SelectItem } from "@nextui-org/react";
 import { Toaster, toast } from "sonner";
 import { useNavigate } from "react-router-dom"
 import { allGrupos, cuatrimestre } from "../../../data/cuatrimestre-grupo";
-import { createAsignatura, getAllAsignaturas } from "../../../api/asignaturas";
 import React, { useEffect, useState } from "react";
 import { IoEye, IoEyeOff } from "react-icons/io5";
-import { createProfesor } from "../../../api/profesores";
 import { createAlumno } from "../../../api/alumnos";
 
 function AgregarAlumno() {

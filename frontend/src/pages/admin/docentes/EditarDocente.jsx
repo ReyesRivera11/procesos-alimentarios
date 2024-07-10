@@ -1,0 +1,177 @@
+import { styles } from "../../../assets/styles/global-styles";
+import { Controller, useForm } from "react-hook-form";
+import { Input, Select, SelectItem } from "@nextui-org/react";
+import { Toaster, toast } from "sonner";
+import { useNavigate, useParams } from "react-router-dom";
+import { cuatrimestre } from "../../../data/cuatrimestre-grupo";
+import { createAsignatura, getAllAsignaturas } from "../../../api/asignaturas";
+import React, { useEffect, useState } from "react";
+import { IoEye, IoEyeOff } from "react-icons/io5";
+import { createProfesor, getProfesorById, updateProfesor } from "../../../api/profesores";
+
+function EditarDocente() {
+    const { register, formState: { errors }, handleSubmit, reset, control } = useForm();
+    const navigate = useNavigate();
+    const [pass, setPass] = React.useState(false);
+    const [confirm, setConfirm] = React.useState(false);
+    const [materias, setMaterias] = useState([]);
+    const params = useParams();
+    const toggleVisibilityPass = () => setPass(!pass);
+    const toggleVisibilityConfirm = () => setConfirm(!confirm);
+    const [values, setValues] = React.useState(new Set([]));
+
+    const onSubmit = handleSubmit(async (values) => {
+        let { materias, nombre, correo } = values;
+        let mat = materias;
+        if (typeof materias === "string") {
+            const materiasNew = materias.split(",");
+            mat = materiasNew
+        }
+        const data = {
+            nombre,
+            correo,
+            materias: mat
+        }
+        try {
+            const res = await updateProfesor(params.id, data);
+            if (res) {
+                toast.success("Datos actualizados correctamente.");
+                setTimeout(() => {
+                    navigate("/docentes");
+                }, 1000);
+            }
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }
+    });
+    useEffect(() => {
+        const getAsignaturas = async () => {
+            const res = await getAllAsignaturas();
+            if (res) {
+                setMaterias(res.data);
+            }
+        };
+        const getDocente = async () => {
+            const res = await getProfesorById(params.id);
+            if (res) {
+                const { nombre, correo, materias } = res.data;
+                const newVal = materias.map(materia => materia._id);
+                setValues(newVal)
+                reset({
+                    nombre,
+                    correo,
+                    materias: materias.map(materia => materia._id), // Set initial values of materias with IDs
+                });
+            }
+        };
+
+        getDocente();
+        getAsignaturas();
+    }, [params.id, reset]);
+
+    return (
+        <div className='w-full sm:p-5 sm:px-20 p-5 flex justify-center'>
+            <Toaster richColors />
+            <div className="w-[480px] px-10 py-5 shadow-xl border rounded-3xl">
+                <div className="flex flex-col items-center justify-center gap-2">
+                    <p className="text-xl font-bold text-black text-center">Editar Docente</p>
+                    <p className="text-gray-500">Llena los campos requeridos a editar.</p>
+                </div>
+
+                <form onSubmit={onSubmit} className="flex flex-col gap-4 my-5 padding">
+                    <div className="flex  flex-col items-center justify-between gap-2">
+                        <Controller
+                            name="nombre"
+                            control={control}
+                            rules={{
+                                required: "El nombre es requerido",
+                                minLength: {
+                                    value: 3,
+                                    message: "El nombre debe contener al menos tres caracteres",
+                                },
+                                maxLength: {
+                                    value: 50,
+                                    message: "El nombre debe de contener al menos 50 caracteres"
+                                }
+                            }}
+                            render={({ field }) => (
+                                <Input
+                                    {...field}
+                                    label="Nombre"
+                                    variant="bordered"
+                                    isInvalid={Boolean(errors?.nombre)}
+                                    errorMessage={errors?.nombre?.message}
+                                    autoComplete="off" // Disable autocomplete
+                                />
+                            )}
+                        />
+                        <Controller
+                            name="correo"
+                            control={control}
+                            rules={{
+                                required: "El correo es requerido",
+                                pattern: {
+                                    value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                                    message: "El email no es válido",
+                                },
+                            }}
+                            render={({ field }) => (
+                                <Input
+                                    {...field}
+                                    label="Correo"
+                                    variant="bordered"
+                                    isInvalid={Boolean(errors?.correo)}
+                                    errorMessage={errors?.correo?.message}
+                                    autoComplete="off" // Disable autocomplete
+                                />
+                            )}
+                        />
+                        <Controller
+                            name="materias"
+                            control={control}
+                            rules={{
+                                required: "La asignatura es requerida.",
+                            }}
+                            render={({ field }) => (
+                                <Select
+                                    {...field}
+                                    label="Asignaturas"
+                                    selectionMode="multiple"
+                                    placeholder="Selecciona las asignaturas"
+                                    variant="bordered"
+                                    selectedKeys={values}
+                                    onSelectionChange={setValues}
+                                    isInvalid={errors?.materias ? true : false}
+                                    errorMessage={errors?.materias?.message}
+                                >
+                                    {materias.map((materia) => (
+                                        <SelectItem
+                                            key={materia._id}
+                                            value={materia._id}
+                                        >
+                                            {materia.nombre}
+                                        </SelectItem>
+                                    ))}
+                                </Select>
+                            )}
+                        />
+
+
+
+                    </div>
+
+                    <div className="flex items-center justify-center gap-4">
+                        <button type="button" onClick={() => navigate("/docentes")} className='text-white rounded-md p-2 font-semibold w-32 bg-red-600'>
+                            Cancelar
+                        </button>
+                        <button className='text-white rounded-md p-2 font-semibold w-32 bg-green-600'>
+                            Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}
+
+export default EditarDocente;

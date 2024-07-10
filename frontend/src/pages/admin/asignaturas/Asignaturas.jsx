@@ -250,6 +250,7 @@ const Asignaturas = () => {
                                                     isIconOnly
                                                     color="primary"
                                                     variant="flat"
+                                                    onClick={()=>navigate(`/editar-asignatura/${item._id}`)}
                                                 >
                                                     <Tooltip className="bg-blue-500 text-white" content="Editar">
                                                         <span>

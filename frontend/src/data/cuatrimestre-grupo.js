@@ -19,18 +19,16 @@ export const allGrupos = [
 
 export const niveles = [
     "all",
-    "Primero",
-    "Segundo",
-    "Tercero",
-    "Cuarto",
-    "Quinto",
-    "Sexto",
-    "Séptimo",
-    "Octavo",
-    "Noveno",
-    "Décimo",
-    "Undécimo",
-    "Duodécimo"
+    "PRIMERO",
+    "SEGUNDO",
+    "TERCERO",
+    "CUARTO",
+    "QUINTO",
+    "SEPTIMO",
+    "OCTAVO",
+    "NOVENO",
+    "DÉCIMO",
+    "DECIMOPRIMERO",
 ];
 
 export const cuatrimestre = [
@@ -39,12 +37,10 @@ export const cuatrimestre = [
     "TERCERO",
     "CUARTO",
     "QUINTO",
-    "SEXTO",
     "SEPTIMO",
     "OCTAVO",
     "NOVENO",
-    "DECIMO",
-    "UNDÉCIMO",
-    "DUODÉCIMO"
+    "DÉCIMO",
+    "DECIMOPRIMERO",
 ];
 

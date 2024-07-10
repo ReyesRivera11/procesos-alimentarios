@@ -22,6 +22,16 @@ export class UpdateProfesoreDto extends PartialType(CreateProfesoreDto) {
     password: string;
 
     @IsOptional()
-    @IsMongoId()
+    @IsMongoId({each:true})
     materias:Types.ObjectId[];
+}
+
+
+export class ChangePasswordDto extends PartialType(CreateProfesoreDto){
+    @IsString()
+    @MinLength(6)
+    password: string;
+
+    @IsString()
+    actualPassword: string;
 }

@@ -21,7 +21,6 @@ function AgregarDocente() {
     const onSubmit = handleSubmit(async (values) => {
         const {materias,nombre,correo,password} = values;
         const newMaterias = materias.split(",");
-        console.log(newMaterias);
         try {
             console.log(values);
             const data = {

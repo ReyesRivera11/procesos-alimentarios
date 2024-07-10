@@ -33,7 +33,7 @@ export class AlumnosController {
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   async update(@Param('id') id: string, @Body() updateAlumnoDto: UpdateAlumnoDto) {
     try {
       const res = await this.alumnosService.update(id, updateAlumnoDto)

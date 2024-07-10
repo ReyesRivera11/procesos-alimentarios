@@ -51,7 +51,7 @@ const ChangePassword = () => {
                     <form onSubmit={onSubmit} className="flex flex-col mt-5 gap-4">
                         <Input
                             label="Contraseña actual"
-                            variant="flat"
+                            variant="bordered"
                             isInvalid={errors.actualPassword ? true : false || textError.length>0 ? true : false}
                             errorMessage={errors?.actualPassword?.message || textError}
                             endContent={
@@ -76,7 +76,7 @@ const ChangePassword = () => {
 
                         <Input
                             label="Contraseña nueva"
-                            variant="flat"
+                            variant="bordered"
                             isInvalid={errors.password ? true : false}
                             errorMessage={errors?.password?.message}
                             endContent={
@@ -108,7 +108,7 @@ const ChangePassword = () => {
                         />
                         <Input
                             label="Confirmar contraseña"
-                            variant="flat"
+                            variant="bordered"
                             isInvalid={errors.confirm ? true : false}
                             errorMessage={errors?.confirm?.message}
                             endContent={

@@ -197,7 +197,7 @@ const AlumnosLista = () => {
 
                             </DropdownMenu>
                         </Dropdown>
-                        <Button className="" variant="flat" onClick={() => navigate("/agregar-alumno")} >
+                        <Button type="button" className="" variant="flat" onClick={() => navigate("/agregar-alumno")} >
                             <Tooltip content="Agregar">
                                 <span>
                                     <IoMdAdd className=" text-2xl " />
@@ -288,6 +288,7 @@ const AlumnosLista = () => {
                                                     isIconOnly
                                                     color="primary"
                                                     variant="flat"
+                                                    onClick={()=>navigate(`/editar-alumno/${item._id}`)}
                                                 >
                                                     <Tooltip className="bg-blue-500 text-white" content="Editar">
                                                         <span>

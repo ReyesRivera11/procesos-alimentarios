@@ -219,6 +219,7 @@ const Docentes = () => {
                                                     isIconOnly
                                                     color="primary"
                                                     variant="flat"
+                                                    onClick={()=>navigate(`/editar-docente/${item._id}`)}
                                                 >
                                                     <Tooltip className="bg-blue-500 text-white" content="Editar">
                                                         <span>
