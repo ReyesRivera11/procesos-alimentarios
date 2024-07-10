@@ -44,7 +44,7 @@ const Asignaturas = () => {
         const lowercasedFilter = filterValue.toLowerCase();
         const filteredAndSortedData = data
             .filter(item => item?.nombre.toLowerCase().includes(lowercasedFilter))
-            .filter(item => semesterFilter === "all" || item?.cuatrimestre === semesterFilter);
+            .filter(item => semesterFilter === "all" || item?.cuatrimestre.toLowerCase() === semesterFilter.toLowerCase());
 
         if (sortOrder === "asc") {
             filteredAndSortedData.sort((a, b) => a.nombre.localeCompare(b.nombre));

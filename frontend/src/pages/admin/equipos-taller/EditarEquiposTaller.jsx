@@ -1,5 +1,5 @@
 import { styles } from "../../../assets/styles/global-styles"
-import { Controller, useForm } from "react-hook-form";
+import { Controller, set, useForm } from "react-hook-form";
 import { Input } from "@nextui-org/react";
 import { Select, SelectItem } from "@nextui-org/react";
 import { Toaster, toast } from "sonner";
@@ -46,7 +46,6 @@ function EditarEquiposTaller() {
             toast.error(error.response.data.message);
         }
     });
-
     useEffect(()=>{
         const getEquipoTaller = async ()=>{
             const res = await getEquipoTallerById(params.id)
@@ -110,6 +109,8 @@ function EditarEquiposTaller() {
                                     variant="bordered"
                                     isInvalid={errors?.enUso ? true : false}
                                     errorMessage={errors?.enUso?.message}
+                                    // onSelectionChange={(value) => console.log(value)}
+                                    selectedKeys={new Set([field.value.toString()])}
                                     {
                                     ...field
                                     }
@@ -142,6 +143,7 @@ function EditarEquiposTaller() {
                                     variant="bordered"
                                     isInvalid={Boolean(errors?.estado)}
                                     errorMessage={errors?.estado?.message}
+                                    selectedKeys={new Set([field.value])}
                                     {
                                     ...field
                                     }

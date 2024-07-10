@@ -48,7 +48,7 @@ const AlumnosLista = () => {
         const filteredAndSortedData = data
             .filter(item => item?.nombre.toLowerCase().includes(lowercasedFilter))
             .filter(item => groupFilter === "all" || item?.grupo === groupFilter)
-            .filter(item => semesterFilter === "all" || item?.cuatrimestre === semesterFilter);
+            .filter(item => semesterFilter === "all" || item?.cuatrimestre.toLowerCase() === semesterFilter.toLocaleLowerCase());
 
         if (sortOrder === "asc") {
             filteredAndSortedData.sort((a, b) => a.nombre.localeCompare(b.nombre));

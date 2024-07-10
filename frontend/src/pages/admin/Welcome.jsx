@@ -8,8 +8,7 @@ const WelcomeAdmin = () => {
     <>
       <div className='w-full h-lvh sm:p-10 sm:px-20 p-5'>
         <div
-          className="rounded-md border-green-800 border-2 p-10 flex flex-col gap-10"
-          style={{ backgroundColor: styles.backegrounGreen }}
+          className="rounded-md shadow-lg shadow-gray-400 border-2 p-10 flex flex-col gap-10 bg-gray-200 max-w-[800px] max-h-[300px] m-auto font-bold"
         >
           <p className='text-center font-bold'>BIENVENIDO</p>
           <p className='uppercase'>{user?.nombre} {user?.apellidos}</p>

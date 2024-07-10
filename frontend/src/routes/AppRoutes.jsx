@@ -40,6 +40,9 @@ import EditarAlumno from '../pages/admin/alumnos/EditarAlumno';
 import EditarDocente from '../pages/admin/docentes/EditarDocente';
 import EditarAditivo from '../pages/admin/aditivos/EditarAditivo';
 import EditarEquiposTaller from '../pages/admin/equipos-taller/EditarEquiposTaller';
+import EditarEquipoLab from '../pages/admin/equiposlab/EditarEquipoLab';
+import EditarMaterialAlmacen from '../pages/admin/materialesalmacen/EditarMaterialAlmacen';
+import EditarMaterialLab from '../pages/admin/materialeslab/EditarMaterialLab';
 
 const AppRoutes = () => {
     const location = useLocation();
@@ -53,7 +56,7 @@ const AppRoutes = () => {
         "/agregar-material-alm", "/agregar-asignatura", "/agregar-docente", 
         "/agregar-alumno", "/equipos-taller", "/agregar-equipo-taller", "/equipos-lab", 
         "/agregar-equipo-lab", "/editar-asignatura/:id", "/editar-alumno/:id","/editar-docente/:id",
-        "/editar-aditivo/:id","/editar-equipo-taller/:id"
+        "/editar-aditivo/:id","/editar-equipo-taller/:id","/editar-equipo-lab/:id","/editar-material-alm/:id","/editar-material-lab/:id"
     ];
 
     const isRouteWithNavBar = (routes) => {
@@ -98,11 +101,14 @@ const AppRoutes = () => {
                         <Route path='/editar-asignatura/:id' element={<EditarAsignatura />} />
                         <Route path='/materialesLab' element={<MaterialesLab />} />
                         <Route path='/agregar-material-lab' element={<AgregarMaterialLab />} />
+                        <Route path='/editar-material-lab/:id' element={<EditarMaterialLab />} />
                         <Route path='/materialesAlmacen' element={<MaterialesAlmacen />} />
                         <Route path='/agregar-material-alm' element={<AgregarMaterialAlmacen />} />
+                        <Route path='/editar-material-alm/:id' element={<EditarMaterialAlmacen />} />
                         <Route path='/equipos-taller' element={<EquiposTaller />} />
                         <Route path='/equipos-lab' element={<EquiposLab />} />
                         <Route path='/agregar-equipo-lab' element={<AgregarEquipoLab />} />
+                        <Route path='/editar-equipo-lab/:id' element={<EditarEquipoLab />} />
                         <Route path='/agregar-equipo-taller' element={<AgregarEquiposTaller />} />
                         <Route path='/editar-equipo-taller/:id' element={<EditarEquiposTaller />} />
                     </Route>

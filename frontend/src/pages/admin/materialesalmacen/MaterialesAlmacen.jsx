@@ -212,7 +212,9 @@ const MaterialesAlmacen = () => {
                                             {(columnKey) => (
                                                 columnKey === 'acciones' ? (
                                                     <TableCell className="text-center flex justify-center gap-3">
-                                                        <Button isIconOnly variant="flat" color="primary" >
+                                                        <Button isIconOnly variant="flat" color="primary" 
+                                                        onClick={()=>navigate(`/editar-material-alm/${item._id}`)}
+                                                        >
                                                             <Tooltip content="Editar" className="text-white bg-blue-500">
                                                                 <span>
                                                                     <CiEdit className="text-2xl" />

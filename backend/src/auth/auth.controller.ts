@@ -29,7 +29,10 @@ export class AuthController {
     res.setHeader('Authorization', `Bearer ${result.token}`);
     return result;
   }
-
+  @Get("/prueba-vercel")
+  async pruebavercel(){
+    return "This is a test 2"
+  }
   // @Post('login-admin')
   // @HttpCode(HttpStatus.OK)
   // async loginAdmin(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res: Response) {

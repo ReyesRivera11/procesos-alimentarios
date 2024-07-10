@@ -222,6 +222,7 @@ const EquiposLab = () => {
                                                     isIconOnly
                                                     color="primary"
                                                     variant="flat"
+                                                    onClick={()=>navigate(`/editar-equipo-lab/${item._id}`)}
                                                 >
                                                     <Tooltip className="bg-blue-500 text-white" content="Editar">
                                                         <span>
