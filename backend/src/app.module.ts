@@ -22,4 +22,4 @@ import { PracticasModule } from './practicas/practicas.module';
   controllers: [],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule { };

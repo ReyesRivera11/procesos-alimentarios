@@ -15,22 +15,21 @@ export class ProfesoresService {
 
   async create(createProfesoreDto: CreateProfesoreDto): Promise<Profesores> {
     const profesor = await this.profesoresModel.find({ correo: createProfesoreDto.correo });
-
+    const hasedPassword = await bcrypt.hash(createProfesoreDto.password, 10);
     if (profesor.length > 0) {
       throw new ConflictException("El correo ya se encuentra registrado.");
     }
-    const res = new this.profesoresModel(createProfesoreDto);
+    const res = new this.profesoresModel({...createProfesoreDto,password:hasedPassword});
     await res.save();
     return res;
-
   }
 
   async findAll(): Promise<Profesores[]> {
-    return this.profesoresModel.find().populate("materias", "nombre cuatrimestre", Asignaturas.name)
+    return this.profesoresModel.find().populate("materias", "nombre cuatrimestre", Asignaturas.name).select("-password")
   }
 
   async findOne(id: string): Promise<Profesores> {
-    return this.profesoresModel.findById(id).populate("materias", "nombre cuatrimestre", Asignaturas.name);
+    return this.profesoresModel.findById(id).populate("materias", "nombre cuatrimestre", Asignaturas.name).select("-password");
   }
 
   async changePassword(id: string, changePasswordVal: ChangePasswordDto) {

@@ -21,12 +21,13 @@ export class AlumnosService {
     return res;
   }
 
-  findAll() {
-    return this.alusmosModel.find();
+  async findAll() {
+    const res = await this.alusmosModel.find().select('-password').lean().exec();
+    return res;
   }
 
   findOne(id: string) {
-    return this.alusmosModel.findById(id);
+    return this.alusmosModel.findById(id).select("-password");
   }
 
   async changePassword(id: string, changePasswordVal: ChangePasswordDto) {
