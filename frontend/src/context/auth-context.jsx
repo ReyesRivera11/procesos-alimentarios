@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react';
 import { login, verifyToken } from '../api/auth';
 
 export const AuthContext = createContext();
@@ -20,8 +20,9 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         verifyAuth();
     }, [])
-
+    
     const loginAlumno = async (data) => {
+        data.preventDefault()
         try {
             const res = await login(data);
             if (res) {

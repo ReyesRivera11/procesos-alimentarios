@@ -33,14 +33,7 @@ export class AuthController {
   async pruebavercel(){
     return "This is a test 2"
   }
-  // @Post('login-admin')
-  // @HttpCode(HttpStatus.OK)
-  // async loginAdmin(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res: Response) {
-  //   const result = await this.authService.loginAdmin(loginDto);
-  //   res.setHeader('Authorization', `Bearer ${result.token}`);
-  //   return result;
-  // }
-
+  
   @Get("prueba")
   // @Roles(Role.ADMIN)
   // @UseGuards(AuthGuard,RolesGuard)

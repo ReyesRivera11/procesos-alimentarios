@@ -43,12 +43,14 @@ import EditarEquiposTaller from '../pages/admin/equipos-taller/EditarEquiposTall
 import EditarEquipoLab from '../pages/admin/equiposlab/EditarEquipoLab';
 import EditarMaterialAlmacen from '../pages/admin/materialesalmacen/EditarMaterialAlmacen';
 import EditarMaterialLab from '../pages/admin/materialeslab/EditarMaterialLab';
+import ChangePasswordDocente from '../pages/docente/ChangePassword';
+import Practicas from '../pages/docente/Practicas';
 
 const AppRoutes = () => {
     const location = useLocation();
 
     const routesWithNavBarStudent = ["/inicio", "/cambiar-password", "/solicitar-material"];
-    const routesWithNavBarTeacher = ["/inicio-docente", "/crear-practica"];
+    const routesWithNavBarTeacher = ["/inicio-docente", "/crear-practica","/cambiar-pass-docente","/practicas-docente"];
     const routesWithNavBarAdmin = [
         "/inicio-admin", "/prestamos", "/solicitudes", "/entregas", "/devoluciones", 
         "/aditivos", "/alumnos", "/docentes", "/asignaturas", "/materialesLab", 
@@ -115,6 +117,8 @@ const AppRoutes = () => {
                     <Route element={<ProtectedRouterDocente />}>
                         <Route path='/inicio-docente' element={<WelcomeDocente />} />
                         <Route path='/crear-practica' element={<CrearPractica />} />
+                        <Route path='/cambiar-pass-docente' element={<ChangePasswordDocente />} />
+                        <Route path='/practicas-docente' element={<Practicas />} />
                     </Route>
                     <Route path='/' element={<Home />} />
                     <Route path='*' element={<NotFound />} />

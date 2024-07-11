@@ -68,3 +68,5 @@ export class UpdatePracticaDto extends PartialType(CreatePracticaDto) {
     @MaxLength(15)
     estado:string;
 }
+
+

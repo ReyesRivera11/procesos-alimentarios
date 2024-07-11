@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
 import { ProfesoresService } from './profesores.service';
 import { CreateProfesoreDto } from './dto/create-profesore.dto';
-import { UpdateProfesoreDto } from './dto/update-profesore.dto';
+import { ChangePasswordDto, UpdateProfesoreDto } from './dto/update-profesore.dto';
 
 @Controller('profesores')
 export class ProfesoresController {
@@ -27,6 +27,13 @@ export class ProfesoresController {
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateProfesoreDto: UpdateProfesoreDto) {
     const res = await this.profesoresService.update(id, updateProfesoreDto);
+    if(!res) throw new NotFoundException("El profesor no se encuentra registrado.");
+    return res;
+  }
+
+  @Patch('change-pass-docente/:id')
+  async changePassword(@Param('id') id: string, @Body() changePass: ChangePasswordDto) {
+    const res = await this.profesoresService.changePassword(id, changePass);
     if(!res) throw new NotFoundException("El profesor no se encuentra registrado.");
     return res;
   }

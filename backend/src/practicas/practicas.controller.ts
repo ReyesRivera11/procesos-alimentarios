@@ -17,9 +17,14 @@ export class PracticasController {
     return this.practicasService.findAll();
   }
 
+  @Get("/practicas-disponibles")
+  findAvailable(@Body() { cuatrimestre, grupo }: { cuatrimestre: string; grupo: string }) {
+    return this.practicasService.findAvailable({cuatrimestre,grupo});
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.practicasService.findOne(+id);
+    return this.practicasService.findOne(id);
   }
 
   @Patch(':id')

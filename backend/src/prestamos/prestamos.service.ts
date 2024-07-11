@@ -642,6 +642,7 @@ export class PrestamosService {
     }
   }
 
+
   async update(id: string, updatePracticaDto: UpdatePracticaDto) {
     const res = await this.prestamosModel.findByIdAndUpdate(id, updatePracticaDto, { new: true });
     return res;

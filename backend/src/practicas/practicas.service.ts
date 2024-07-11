@@ -113,15 +113,48 @@ export class PracticasService {
 
   async findAll() {
     const materialesAlmacen = await this.materialesAlmacenModel.find().lean().exec() as MaterialAlmacen[];
-      const materialesLab = await this.materialesLabModel.find().lean().exec() as MaterialLab[];
-      const aditivos = await this.aditivosModel.find().lean().exec() as Aditivo[];
-      const equiposLab = await this.equiposLabModel.find().lean().exec() as EquiposLaboratorio[];
-      const equiposTaller = await this.equiposTallerModel.find().lean().exec() as EquiposTallerInterface[];
+    const materialesLab = await this.materialesLabModel.find().lean().exec() as MaterialLab[];
+    const aditivos = await this.aditivosModel.find().lean().exec() as Aditivo[];
+    const equiposLab = await this.equiposLabModel.find().lean().exec() as EquiposLaboratorio[];
+    const equiposTaller = await this.equiposTallerModel.find().lean().exec() as EquiposTallerInterface[];
 
-      const practicas = await this.practicasModel.find()
+    const practicas = await this.practicasModel.find()
       .populate('asignatura', 'nombre')
       .populate('profesor', 'nombre')
-      .sort({ createdAt: -1}) 
+      .sort({ createdAt: -1 })
+      .lean()
+      .exec() as Practica[];
+
+    const practicasConMateriales = practicas.map(practica => {
+      const materialesNew = practica.materiales.map((material: Material) => {
+        const materialAlmacen = materialesAlmacen.find(mat => mat._id.toString() === material._id.toString());
+        const materialLab = materialesLab.find(mat => mat._id.toString() === material._id.toString());
+        const aditivo = aditivos.find(mat => mat._id.toString() === material._id.toString());
+        const equipoLab = equiposLab.find(mat => mat._id.toString() === material._id.toString());
+        const equipoTaller = equiposTaller.find(mat => mat._id.toString() === material._id.toString());
+
+        return materialAlmacen || materialLab || aditivo || equipoLab || equipoTaller;
+      }).filter(material => material !== undefined);
+
+      return {
+        ...practica,
+        materiales: materialesNew
+      };
+    });
+
+    return practicasConMateriales;
+  }
+  async findOne(id: string) {
+    const materialesAlmacen = await this.materialesAlmacenModel.find().lean().exec() as MaterialAlmacen[];
+    const materialesLab = await this.materialesLabModel.find().lean().exec() as MaterialLab[];
+    const aditivos = await this.aditivosModel.find().lean().exec() as Aditivo[];
+    const equiposLab = await this.equiposLabModel.find().lean().exec() as EquiposLaboratorio[];
+    const equiposTaller = await this.equiposTallerModel.find().lean().exec() as EquiposTallerInterface[];
+
+    const practicas = await this.practicasModel.find({ _id: id })
+      .populate('asignatura', 'nombre')
+      .populate('profesor', 'nombre')
+      .sort({ createdAt: -1 })
       .lean()
       .exec() as Practica[];
 
@@ -145,15 +178,46 @@ export class PracticasService {
     return practicasConMateriales;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} practica`;
+  async findAvailable({ cuatrimestre, grupo }: { cuatrimestre: string; grupo: string }) {
+    const materialesAlmacen = await this.materialesAlmacenModel.find().lean().exec() as MaterialAlmacen[];
+    const materialesLab = await this.materialesLabModel.find().lean().exec() as MaterialLab[];
+    const aditivos = await this.aditivosModel.find().lean().exec() as Aditivo[];
+    const equiposLab = await this.equiposLabModel.find().lean().exec() as EquiposLaboratorio[];
+    const equiposTaller = await this.equiposTallerModel.find().lean().exec() as EquiposTallerInterface[];
+
+    const practicas = await this.practicasModel.find({ cuatrimestre: cuatrimestre, grupo: grupo })
+      .populate('asignatura', 'nombre')
+      .populate('profesor', 'nombre')
+      .sort({ createdAt: -1 })
+      .lean()
+      .exec() as Practica[];
+
+    const practicasConMateriales = practicas.map(practica => {
+      const materialesNew = practica.materiales.map((material: Material) => {
+        const materialAlmacen = materialesAlmacen.find(mat => mat._id.toString() === material._id.toString());
+        const materialLab = materialesLab.find(mat => mat._id.toString() === material._id.toString());
+        const aditivo = aditivos.find(mat => mat._id.toString() === material._id.toString());
+        const equipoLab = equiposLab.find(mat => mat._id.toString() === material._id.toString());
+        const equipoTaller = equiposTaller.find(mat => mat._id.toString() === material._id.toString());
+
+        return materialAlmacen || materialLab || aditivo || equipoLab || equipoTaller;
+      }).filter(material => material !== undefined);
+
+      return {
+        ...practica,
+        materiales: materialesNew
+      };
+    });
+
+    return practicasConMateriales;
   }
 
+
   update(id: string, updatePracticaDto: UpdatePracticaDto) {
-    return this.practicasModel.findByIdAndUpdate(id,updatePracticaDto)
+    return this.practicasModel.findByIdAndUpdate(id, updatePracticaDto);
   }
 
   remove(id: string) {
-    return this.practicasModel.findByIdAndDelete(id)
+    return this.practicasModel.findByIdAndDelete(id);
   }
 }

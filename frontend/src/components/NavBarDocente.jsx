@@ -33,7 +33,7 @@ const NavBarDocente = () => {
                         <NavLink to={"/inicio-docente"}>Inicio</NavLink>
                         <NavLink to={"/cambiar-pass-docente"}>Cambiar contraseña</NavLink>
                         <NavLink to={"/crear-practica"}>Practica</NavLink>
-                        <NavLink to={"/practicas"}>Practicas</NavLink>
+                        <NavLink to={"/practicas-docente"}>Practicas</NavLink>
                         <button onClick={signOut} className="p-2 rounded-md" style={{ backgroundColor: styles.backgroundOrange }}>Cerrar sesion</button>
                     </div>
                 </div>
@@ -43,7 +43,7 @@ const NavBarDocente = () => {
                 <NavLink to={"/inicio-docente"}>Inicio</NavLink>
                 <NavLink to={"/cambiar-pass-docente"}>Cambiar contraseña</NavLink>
                 <NavLink to={"/crear-practica"}>Practica</NavLink>
-                <NavLink to={"/practicas"}>Practicas</NavLink>
+                <NavLink to={"/practicas-docente"}>Practicas</NavLink>
                 <button
                     onClick={signOut}
                     className="p-2 rounded-md sm:text-xs md:text-[16px]"
