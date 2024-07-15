@@ -39,8 +39,6 @@ function AgregarDocente() {
             } else {
                 toast.error("Error en el servidor.");
             }
-
-
         }
         catch (error) {
             toast.error(error.response.data.message);

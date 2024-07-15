@@ -1,8 +1,13 @@
 import axios from "./axios";
 
+
 export const getAllLoansApi = () => axios.get("/prestamos");
 
+export const createLoans = (data) => axios.post("/prestamos",data);
+
 export const getLoansById = (id) => axios.get(`/prestamos/${id}`);
+
+export const getLoansByAlumno = (id) => axios.get(`/prestamos/prestamos-alumno/${id}`);
 
 export const getAllRequests = () => axios.get(`/prestamos/get-requests`);
 

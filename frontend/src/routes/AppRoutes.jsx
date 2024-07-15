@@ -45,11 +45,11 @@ import EditarMaterialAlmacen from '../pages/admin/materialesalmacen/EditarMateri
 import EditarMaterialLab from '../pages/admin/materialeslab/EditarMaterialLab';
 import ChangePasswordDocente from '../pages/docente/ChangePassword';
 import Practicas from '../pages/docente/Practicas';
+import Prestamos from '../pages/alumno/Prestamos';
 
 const AppRoutes = () => {
     const location = useLocation();
-
-    const routesWithNavBarStudent = ["/inicio", "/cambiar-password", "/solicitar-material"];
+    const routesWithNavBarStudent = ["/inicio", "/cambiar-password", "/solicitar-material","/solicitudes-alumno"];
     const routesWithNavBarTeacher = ["/inicio-docente", "/crear-practica","/cambiar-pass-docente","/practicas-docente"];
     const routesWithNavBarAdmin = [
         "/inicio-admin", "/prestamos", "/solicitudes", "/entregas", "/devoluciones", 
@@ -80,6 +80,7 @@ const AppRoutes = () => {
                 <Routes>
                     <Route element={<ProtectedRouterStudent />}>
                         <Route path='/inicio' element={<Welcome />} />
+                        <Route path='/solicitudes-alumno' element={<Prestamos />} />
                         <Route path='/cambiar-password' element={<ChangePassword />} />
                         <Route path='/solicitar-material' element={<RequestMaterials />} />
                     </Route>

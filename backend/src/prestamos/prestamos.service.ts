@@ -587,7 +587,13 @@ export class PrestamosService {
           const equipoLab = equiposLab.find(mat => mat._id.toString() === material._id.toString());
           const equipoTaller = equiposTaller.find(mat => mat._id.toString() === material._id.toString());
 
-          return materialAlmacen || materialLab || aditivo || equipoLab || equipoTaller;
+          const newMaterial = {
+            nombre: materialAlmacen?.nombre || materialLab?.nombre || aditivo?.nombre || equipoLab?.nombre || equipoTaller?.nombre,
+            cantidad:material.cantidad,
+            _id:material._id
+          }
+          
+          return newMaterial
         }).filter(material => material !== undefined);
 
         return {
@@ -636,6 +642,50 @@ export class PrestamosService {
 
 
       return { ...practicas, materiales: materialesNew };
+    } catch (error) {
+      console.error('Error al buscar prácticas:', error);
+      throw error;
+    }
+  }
+
+  async findByAlumno(id:string) {
+    try {
+      const materialesAlmacen = await this.materialesAlmacenModel.find().lean().exec() as MaterialAlmacen[];
+      const materialesLab = await this.materialesLabModel.find().lean().exec() as MaterialLab[];
+      const aditivos = await this.aditivosModel.find().lean().exec() as Aditivo[];
+      const equiposLab = await this.equiposLabModel.find().lean().exec() as EquiposLaboratorio[];
+      const equiposTaller = await this.equiposTallerModel.find().lean().exec() as EquiposTallerInterface[];
+
+      const practicas = await this.prestamosModel.find({alumno:id})
+        .populate('asignatura', 'nombre')
+        .populate('profesor', 'nombre')
+        .populate('alumno', 'nombre')
+        .sort({ createdAt: -1 })
+        .lean()
+        .exec() as PrestamosEntity[];
+
+      const practicasConMateriales = practicas.map(practica => {
+        const materialesNew = practica.materiales.map((material: Material) => {
+          const materialAlmacen = materialesAlmacen.find(mat => mat._id.toString() === material._id.toString());
+          const materialLab = materialesLab.find(mat => mat._id.toString() === material._id.toString());
+          const aditivo = aditivos.find(mat => mat._id.toString() === material._id.toString());
+          const equipoLab = equiposLab.find(mat => mat._id.toString() === material._id.toString());
+          const equipoTaller = equiposTaller.find(mat => mat._id.toString() === material._id.toString());
+          const newData = {
+            _id: materialAlmacen?._id || materialLab?._id || aditivo?._id || equipoLab?._id || equipoTaller?._id,
+            nombre:materialAlmacen?.nombre || materialLab?.nombre || aditivo?.nombre || equipoLab?.nombre || equipoTaller?.nombre,
+            cantidad:material.cantidad
+          }
+          return  newData;
+        }).filter(material => material !== undefined);
+
+        return {
+          ...practica,
+          materiales: materialesNew
+        };
+      });
+
+      return practicasConMateriales;
     } catch (error) {
       console.error('Error al buscar prácticas:', error);
       throw error;

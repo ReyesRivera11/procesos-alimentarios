@@ -52,6 +52,13 @@ export class PracticasController {
     return res;
   }
 
+  @Get('prestamos-alumno/:id')
+  async findByAlumno(@Param('id') id: string) {
+    const res = await this.prestamosServices.findByAlumno(id);
+    if(!res) throw new NotFoundException("El prestamo no se encuentra registrado o fue borrado.")
+    return res;
+  }
+
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updatePracticaDto: UpdatePracticaDto) {
     const res = await this.prestamosServices.update(id, updatePracticaDto);

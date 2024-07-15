@@ -22,8 +22,7 @@ export const AuthProvider = ({ children }) => {
     }, [])
     
     const loginAlumno = async (data) => {
-        data.preventDefault()
-        try {
+            try {
             const res = await login(data);
             if (res) {
                 setUser(res.data.user);

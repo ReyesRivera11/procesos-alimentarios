@@ -112,7 +112,7 @@ const AlumnosLista = () => {
                     </div>
                     <div className="flex w-full md:max-w-[900px] justify-end mx-auto my-2 gap-3">
                         <Dropdown>
-                            <DropdownTrigger className="hidden sm:flex">
+                            <DropdownTrigger className=" sm:flex">
                                 <Button variant="flat">
                                     <Tooltip content="Ordenar">
                                         <span>

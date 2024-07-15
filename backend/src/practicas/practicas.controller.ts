@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Query } from '@nestjs/common';
 import { PracticasService } from './practicas.service';
 import { CreatePracticaDto } from './dto/create-practica.dto';
 import { UpdatePracticaDto } from './dto/update-practica.dto';
@@ -17,9 +17,14 @@ export class PracticasController {
     return this.practicasService.findAll();
   }
 
-  @Get("/practicas-disponibles")
-  findAvailable(@Body() { cuatrimestre, grupo }: { cuatrimestre: string; grupo: string }) {
-    return this.practicasService.findAvailable({cuatrimestre,grupo});
+  @Get('/practicas-disponibles')
+  findAvailable(@Query('cuatrimestre') cuatrimestre: string, @Query('grupo') grupo: string) {
+    return this.practicasService.findAvailable({ cuatrimestre, grupo });
+  }
+
+  @Get('practicas-docente/:id')
+  findPracticasByDocente(@Param('id') id: string) {
+    return this.practicasService.findPracticasByDocente(id);
   }
 
   @Get(':id')

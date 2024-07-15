@@ -5,9 +5,9 @@ import LogoProcesos from "../assets/images/procesos_alimentarios-removebg-previe
 import UthhLogo from "../assets/images/uthh-logo.png";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
 
-import { getLoansById } from '../api/loans';
+import { getPracticasById } from '../api/practicas';
 
-const ModalLoans = ({ id }) => {
+const ModalPracticas = ({ id }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [size, setSize] = React.useState('md');
     const [data, setData] = useState({});
@@ -15,10 +15,9 @@ const ModalLoans = ({ id }) => {
         setSize(size)
         onOpen();
     };
-
     useEffect(() => {
         const getLoan = async () => {
-            const res = await getLoansById(id);
+            const res = await getPracticasById(id);
             if (res) {
                 setData(res.data);
             }
@@ -66,77 +65,49 @@ const ModalLoans = ({ id }) => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-center">
                                     <div >
                                         <label className='font-semibold'>Asignatura:</label>
-                                        <p className='border border-gray-300 p-1 rounded-md  uppercase'>{data?.asignatura?.nombre}</p>
+                                        <p className='border border-gray-300 p-1 rounded-md  uppercase'>{data[0]?.asignatura?.nombre}</p>
                                     </div>
                                     <div className="grid gap-3 grid-cols-2 md:gap-5">
                                         <div>
-                                            <label className='font-semibold'>Fecha de la solicitud:</label>
-                                            <p className="border border-gray-300 p-1 rounded-md  uppercase">{data?.fecha}</p>
+                                            <label className='font-semibold'>Fecha de la practica:</label>
+                                            <p className="border border-gray-300 p-1 rounded-md  uppercase">{data[0]?.fecha}</p>
                                         </div>
                                         <div>
-                                            <label className='font-semibold text-center '>Hora:</label>
-                                            <p className='border border-gray-300 p-1 rounded-md  uppercase'>{data?.horaEntregaSolicitud}</p>
+                                            <label className='font-semibold'>Catrimestre y Grupo:</label>
+                                            <p className="border border-gray-300 p-1 rounded-md  uppercase">
+                                                {data[0]?.cuatrimestre} {data[0]?.grupo}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full">
-                                    <div>
-                                        <label className='font-semibold'>Alumno:</label>
-                                        <p className='border border-gray-300 p-1 rounded-md  uppercase'>{data?.alumno?.nombre}</p>
+
+                                <div className='flex md:flex-row flex-col gap-4 '>
+                                    <div className='md:w-[70%]'>
+                                        <label className='font-semibold'>Nombre de la práctica:</label>
+                                        <p className='border border-gray-300 p-1 rounded-md  uppercase'>{data[0]?.practica}</p>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-5">
-                                        <div>
-                                            <label className='font-semibold'>Grado:</label>
-                                            <p className='border border-gray-300 p-1 rounded-md  uppercase'>{data?.alumno?.cuatrimestre}</p>
-                                        </div>
-                                        <div>
-                                            <label className='font-semibold'>Grupo:</label>
-                                            <p className='border border-gray-300 p-1 rounded-md  uppercase'>{data?.alumno?.grupo}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className='font-semibold'>Nombre de la práctica:</label>
-                                    <p className='border border-gray-300 p-1 rounded-md  uppercase'>{data?.nombrePractica}</p>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 md:gap-10 items-center gap-5">
-                                    <div>
-                                        <label className='font-semibold'>Fecha en la que requiere el material:</label>
-                                        <p className='border border-gray-300 p-1 rounded-md  uppercase'>{data?.fechaMaterialRequerido}</p>
-                                    </div>
-                                    <div >
-                                        <label className='font-semibold'>Hora:</label>
-                                        <p className='border border-gray-300 p-1 rounded-md  uppercase' >{data?.horaMaterialRequerido}</p>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-10">
                                     <div>
                                         <label className='font-semibold'>Estado de la solicitud</label>
                                         <p className='border border-gray-300 p-1 rounded-md  uppercase'>
-                                            {data?.aceptado ? data?.aceptado ? "Aceptada" : "Rechazada" : "Pendiente"}
+                                            {data[0]?.estado}
                                         </p>
                                     </div>
-                                    <div>
-                                        <label className='font-semibold'>Entrega</label>
-                                        <p className='border border-gray-300 p-1 rounded-md  uppercase'>{data?.entregado ? "Entregado" : "Sin entregar"}</p>
-                                    </div>
-                                    <div>
-                                        <label className='font-semibold'>Devolución</label>
-                                        <p className='border border-gray-300 p-1 rounded-md  uppercase'>{data?.entregado ? "Devuelto" : "Sin devolver"}</p>
-                                    </div>
-
                                 </div>
+
+
                                 <Table className=' border border-gray-200 rounded-2xl' aria-label="Example static collection table">
                                     <TableHeader>
-                                        <TableColumn className='w-28 text-center text-sm font-bold' key={"cantidad"}>Cantidad</TableColumn>
                                         <TableColumn className='text-center text-sm font-bold' key={"nombre"}>Material</TableColumn>
+                                        <TableColumn className='w-28 text-center text-sm font-bold' key={"cantidad"}>Cantidad solicitada</TableColumn>
+                                        <TableColumn className='w-28 text-center text-sm font-bold' key={"cantidad"}>Disponibles</TableColumn>
                                     </TableHeader>
-                                    <TableBody items={data?.materiales}>
+                                    <TableBody items={data[0]?.materiales}>
                                         {(item) => (
                                             <TableRow key={item?.nombre}>
-                                                <TableCell className="text-center">{item?.cantidad || item?.existencias}</TableCell>
-                                                <TableCell className="text-center uppercase">{item?.nombre}</TableCell>
+                                                <TableCell className=" uppercase">{item?.nombre}</TableCell>
+                                                <TableCell className="text-center">{item?.cantidad}</TableCell>
+                                                <TableCell className="text-center">{item?.disponible}</TableCell>
                                             </TableRow>
                                         )}
                                     </TableBody>
@@ -147,8 +118,9 @@ const ModalLoans = ({ id }) => {
                     )}
                 </ModalContent>
             </Modal>
+
         </>
     );
 }
 
-export default ModalLoans;
+export default ModalPracticas;

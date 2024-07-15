@@ -12,6 +12,7 @@ import { getAllEquipoTaller } from '../../api/materiales';
 import { allGrupos, cuatrimestre } from '../../data/cuatrimestre-grupo';
 import { crearPractica } from '../../api/practicas';
 import { toast, Toaster } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 const CrearPractica = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
@@ -117,7 +118,7 @@ const CrearPractica = () => {
         return `${day < 10 ? '0' + day : day}/${month < 10 ? '0' + month : month}/${year}`;
     };
 
-    
+    const navigate = useNavigate();
     const onSubmit = handleSubmit(async (values) => {
         if (quantities.length === 0 || Object.keys(quantityErrors).length > 0) {
             setMatErros("Debes seleccionar al menos un material.");
@@ -130,12 +131,16 @@ const CrearPractica = () => {
                 estado:"ACTIVO"
             }
             try {
+                console.log(newData)
                 const res = await crearPractica(newData);
                 if(res){
-                    toast.success("Practica creada correctamente.")
+                    toast.success("Practica creada correctamente.");
+                    setTimeout(() => {
+                        navigate("/practicas-docente")
+                    }, 1000);
                 }
             } catch (error) {
-                toast.error(error.response.data.message)
+                toast.error(error.response.data.message);
             }
         }
     });

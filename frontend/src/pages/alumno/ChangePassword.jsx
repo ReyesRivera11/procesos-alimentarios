@@ -44,14 +44,13 @@ const ChangePassword = () => {
     });
 
     return (
-        <div className="w-full h-lvh sm:p-10 sm:px-20 p-5">
+        <div className="w-full h-lvh  p-5">
             <Toaster richColors/>
             <div className="flex justify-center w-full flex-col items-center">
-                <div className="sm:w-[600px] w-full p-5 font-bold" style={{ backgroundColor: styles.backgroundBeige }}>
-                    <p className="text-center">Cambio de contraseña</p>
-                </div>
-                <div className="mt-5 sm:w-[600px] w-full shadow-md p-5 border-green-600 border-2 rounded-lg">
-                    <p className="text-center font-bold">{user?.nombre}</p>
+               
+                <div className="mt-5 sm:w-[500px] w-full shadow-md p-5  border-2 rounded-lg">
+                <p className='text-center font-bold text-xl'>Cambiar contraseña</p>
+                <p className="text-gray-400 semi-bold text-center">Ingrese la contraseña actual y la nueva contraseña.</p>
                     <form onSubmit={onSubmit} className="flex flex-col mt-5 gap-4">
                         <Input
                             label="Contraseña actual"

@@ -1,90 +1,77 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, Button, Tooltip, Input, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import React, { useEffect } from "react";
-import {  getPracticas } from "../../api/practicas";
-import { CiSearch } from "react-icons/ci";
-import ModalLoans from "../../components/ModalLoans";
+import { CiSearch, CiUnlock } from "react-icons/ci";
+import { Toaster, toast } from 'sonner';
 import { CircularProgress } from "@nextui-org/react";
-import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
+import { CiLock } from "react-icons/ci";
 import ModalDeleteItem from "../../components/ModalDeleteItem";
-import { Toaster, toast } from "sonner";
-
+import { IoMdAdd } from "react-icons/io";
+import { GoListOrdered } from "react-icons/go";
+import { deleteAlumno, getAllAlumnos } from "../../api/alumnos";
+import { SiLevelsdotfyi } from "react-icons/si";
+import { grupos, niveles } from "../../data/cuatrimestre-grupo";
+import { useNavigate } from "react-router-dom";
+import { GoDotFill } from "react-icons/go";
+import { getAllLoansApi, getLoansByAlumno } from "../../api/loans";
+import { useAuth } from "../../context/auth-context";
+import ModalLoans from "../../components/ModalLoans";
+import { BsAlphabetUppercase, BsCalendar2Date } from "react-icons/bs";
+import { deletePractica, getPracticasDocente, updateEstado } from "../../api/practicas";
+import ModalPracticas from "../../components/ModalPracticas";
 const Practicas = () => {
+    const { user } = useAuth();
+    const [semesterFilter, setSemesterFilter] = React.useState("all");
+    const [groupFilter, setGroupFilter] = React.useState("all");
     const [data, setData] = React.useState([]);
     const [loaded, setLoaded] = React.useState(true);
-    const [alumnoArrow, setAlumnoArrow] = React.useState(false);
-    const [practicaArrow, setPracticaArrow] = React.useState(false);
-    const [fechaArrow, setFechaArrow] = React.useState(false);
     const [filteredData, setFilteredData] = React.useState([]);
     const [page, setPage] = React.useState(1);
     const [filterValue, setFilterValue] = React.useState("");
-    const [sortConfig, setSortConfig] = React.useState({ key: null, direction: null });
+    const [sortOrder, setSortOrder] = React.useState("default");
+    const [sortOrderDate, setSortOrderDate] = React.useState("default");
     const rowsPerPage = 10;
     const pages = Math.ceil(filteredData.length / rowsPerPage);
-
-    const parseDate = (dateString) => {
-        const [day, month, year] = dateString.split("/");
-        return new Date(`${year}-${month}-${day}`);
-    };
-
-    const sortedData = React.useMemo(() => {
-        if (sortConfig.key) {
-            const sorted = [...filteredData].sort((a, b) => {
-                let aKey = a[sortConfig.key];
-                let bKey = b[sortConfig.key];
-                if (sortConfig.key === 'alumno') {
-                    aKey = a.alumno?.nombre ?? '';
-                    bKey = b.alumno?.nombre ?? '';
-                } else if (sortConfig.key === 'fechaMaterialRequerido') {
-                    aKey = parseDate(aKey);
-                    bKey = parseDate(bKey);
-                }
-
-                if (aKey < bKey) {
-                    return sortConfig.direction === 'ascending' ? -1 : 1;
-                }
-                if (aKey > bKey) {
-                    return sortConfig.direction === 'ascending' ? 1 : -1;
-                }
-                return 0;
-            });
-            return sorted;
-        }
-        return filteredData;
-    }, [filteredData, sortConfig]);
-
     const items = React.useMemo(() => {
         const start = (page - 1) * rowsPerPage;
         const end = start + rowsPerPage;
-        return sortedData.slice(start, end);
-    }, [page, sortedData]);
-
-    useEffect(() => {
-        const getAllLoans = async () => {
-            const res = await getPracticas();
-            if (res) {
-                setLoaded(false);
-                setData(res.data);
-                setFilteredData(res.data);
-            }
+        return filteredData.slice(start, end);
+    }, [page, filteredData]);
+    const getSolicitudes = async () => {
+        const res = await getPracticasDocente(user._id);
+        if (res) {
             setLoaded(false);
-        };
-        getAllLoans();
+            setData(res.data);
+            setFilteredData(res.data);
+        }
+        setLoaded(false);
+    };
+    useEffect(() => {
+        getSolicitudes();
     }, []);
 
     useEffect(() => {
         const lowercasedFilter = filterValue.toLowerCase();
-        const filteredData = data.filter(item => {
-            return (
-                item?.alumno?.nombre.toLowerCase().includes(lowercasedFilter) ||
-                item?.nombrePractica.toLowerCase().includes(lowercasedFilter) ||
-                item?.fechaMaterialRequerido.toLowerCase().includes(lowercasedFilter) ||
-                item?.horaMaterialRequerido.toLowerCase().includes(lowercasedFilter)
-            );
-        });
-        setFilteredData(filteredData);
-        setPage(1);
-    }, [filterValue, data]);
+        const filteredAndSortedData = data
+            .filter(item => item?.practica?.toLowerCase().includes(lowercasedFilter))
+            .filter(item => groupFilter === "all" || item?.grupo === groupFilter)
+            .filter(item => semesterFilter === "all" || item?.cuatrimestre.toLowerCase() === semesterFilter.toLocaleLowerCase());
 
+        if (sortOrder === "asc") {
+            filteredAndSortedData.sort((a, b) => a?.practica.localeCompare(b.practica));
+        } else if (sortOrder === "desc") {
+            filteredAndSortedData.sort((a, b) => b?.practica.localeCompare(a.practica));
+        }
+        if (sortOrderDate !== "default") {
+            filteredAndSortedData.sort((a, b) => {
+                const dateA = new Date(a?.fecha.split('/').reverse().join('-'));
+                const dateB = new Date(b?.fecha.split('/').reverse().join('-'));
+                return sortOrderDate === "asc" ? dateA - dateB : dateB - dateA;
+            });
+        }
+
+        setFilteredData(filteredAndSortedData);
+        setPage(1);
+    }, [filterValue, data, sortOrder, sortOrderDate,groupFilter,semesterFilter]);
     const onSearchChange = React.useCallback((e) => {
         const { value } = e.target;
         setFilterValue(value);
@@ -95,159 +82,334 @@ const Practicas = () => {
         setPage(1);
     }, []);
 
-    const getKeyValue = (item, columnKey) => {
-        if (columnKey === 'alumno' && typeof item[columnKey] === 'object') {
-            return item[columnKey].nombre;
+
+    const handleSortChange = (key) => {
+        const selectedKey = Array.from(key).join("");
+        if (selectedKey === "ascendente") {
+            setSortOrder("asc");
+        } else if (selectedKey === "descendiente") {
+            setSortOrder("desc");
+        } else {
+            setSortOrder("default");
         }
-        return item[columnKey];
+    };
+    const handleSortChangeDate = (key) => {
+        const selectedKey = Array.from(key).join("");
+        if (selectedKey === "ascendente") {
+            setSortOrderDate("asc");
+        } else if (selectedKey === "descendiente") {
+            setSortOrderDate("desc");
+        } else {
+            setSortOrderDate("default");
+        }
     };
 
-    const requestSort = (key) => {
-        let direction = 'ascending';
-        if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-            direction = 'descending';
-        }
-        setSortConfig({ key, direction });
-    };
-    const handleDelete = async (key) => {
+    const handleDelete = async (id) => {
         try {
-            const res = await deleteLoan(key);
+            const res = await deletePractica(id);
             if (res) {
-                toast.success("Solicitud eliminado correctamente.");
-                setData(data.filter(item => item._id !== key));
+                toast.success("Practica eliminada correctamente.");
+                setData(data.filter(item => item._id !== id));
             }
         } catch (error) {
             console.log(error);
         }
     };
+
+    const handleDesactivar = async (id) => {
+        try {
+            const res = await updateEstado(id, { estado: "INACTIVO" });
+            if (res) {
+                toast.success("Practica deshabilita correctamente.");
+                getSolicitudes();
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    };
+
+    const handleActivar = async (id) => {
+        try {
+            const res = await updateEstado(id, { estado: "ACTIVO" });
+            if (res) {
+                toast.success("Practica habilitada correctamente.");
+                getSolicitudes();
+            }
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+
+
     return (
-        <div className='w-full px-20'>
+        <div className='w-full  p-5'>
             <Toaster richColors />
-            <div className="flex flex-col gap-2 ">
-                <p className="text-center text-3xl font-bold ">Practicas</p>
-                <div className="w-full flex justify-center mb-5">
-                    <Input
-                        isClearable
-                        className="w-full sm:max-w-[400px]"
-                        placeholder="Buscar"
-                        startContent={<CiSearch />}
-                        value={filterValue}
-                        onClear={() => onClear()}
-                        onChange={onSearchChange}
-                    />
+            <div className="w-full mb-2">
+                <div className="flex md:flex-row flex-col justify-between items-center px-20 m-auto gap-3">
+                    <div className="flex md:flex-row flex-col w-full md:gap-10 gap-3">
+                        <p className="text-center text-2xl font-bold ">Practicas</p>
+                        <Input
+                            isClearable
+                            placeholder="Buscar"
+                            startContent={<CiSearch />}
+                            value={filterValue}
+                            onClear={() => onClear()}
+                            onChange={onSearchChange}
+                        />
+                    </div>
+                    <div className="flex w-full justify-end mx-auto my-2 gap-3">
+                        <Dropdown>
+                            <DropdownTrigger className=" sm:flex">
+                                <Button variant="flat">
+                                    <Tooltip content="Ordenar">
+                                        <span>
+                                            <GoListOrdered className="text-xl" />
+                                        </span>
+                                    </Tooltip>
+                                </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu
+                                disallowEmptySelection
+                                aria-label="Table Columns"
+                                closeOnSelect={true}
+                                selectionMode="single"
+                                selectedKeys={new Set([sortOrder === "asc" ? "ascendente" : sortOrder === "desc" ? "descendiente" : "default"])}
+                                onSelectionChange={(key) => handleSortChange(key)}
+                            >
+                                <DropdownItem key="default">
+                                    Por defecto
+                                </DropdownItem>
+                                <DropdownItem key="ascendente">
+                                    Ascendente
+                                </DropdownItem>
+                                <DropdownItem key="descendiente">
+                                    Descendente
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                        <Dropdown>
+                            <DropdownTrigger>
+                                <Button variant="flat">
+                                    <Tooltip content="Filtrar por grupo">
+                                        <span>
+                                            <BsAlphabetUppercase className="text-xl" />
+                                        </span>
+                                    </Tooltip>
+                                </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu
+                                disallowEmptySelection
+                                aria-label="Filtrar por grupo"
+                                closeOnSelect={true}
+                                selectionMode="single"
+                                selectedKeys={new Set([groupFilter])}
+                                onSelectionChange={(key) => setGroupFilter(Array.from(key).join(""))}
+                            >
+
+                                {grupos.map(item => item === "all" ?
+                                    <DropdownItem key={item}>
+                                        Todos
+                                    </DropdownItem> : <DropdownItem key={item}>
+                                        {item}
+                                    </DropdownItem>
+                                )}
+                            </DropdownMenu>
+                        </Dropdown>
+                        <Dropdown>
+                            <DropdownTrigger>
+                                <Button variant="flat">
+                                    <Tooltip content="Filtrar por cuatrimestre">
+                                        <span>
+                                            <SiLevelsdotfyi className="text-xl" />
+                                        </span>
+                                    </Tooltip>
+                                </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu
+                                disallowEmptySelection
+                                className="overflow-y-scroll max-h-96"
+                                aria-label="Filtrar por cuatrimestre"
+                                closeOnSelect={true}
+                                selectionMode="single"
+                                selectedKeys={new Set([semesterFilter])}
+                                onSelectionChange={(key) => setSemesterFilter(Array.from(key).join(""))}
+                            >
+                                {niveles.map(item => item === "all" ?
+                                    <DropdownItem key={item}>
+                                        Todos
+                                    </DropdownItem> : <DropdownItem key={item}>
+                                        {item}
+                                    </DropdownItem>
+                                )}
+
+                            </DropdownMenu>
+                        </Dropdown>
+                        <Dropdown>
+                            <DropdownTrigger className=" sm:flex">
+                                <Button variant="flat">
+                                    <Tooltip content="Ordenar por fecha de solicitud">
+                                        <span>
+                                            <BsCalendar2Date className="text-xl" />
+                                        </span>
+                                    </Tooltip>
+                                </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu
+                                disallowEmptySelection
+                                aria-label="Table Columns"
+                                closeOnSelect={true}
+                                selectionMode="single"
+                                selectedKeys={new Set([sortOrderDate === "asc" ? "ascendente" : sortOrderDate === "desc" ? "descendiente" : "default"])}
+                                onSelectionChange={(key) => handleSortChangeDate(key)}
+                            >
+                                <DropdownItem key="default">
+                                    Por defecto
+                                </DropdownItem>
+                                <DropdownItem key="ascendente">
+                                    Ascendente
+                                </DropdownItem>
+                                <DropdownItem key="descendiente">
+                                    Descendente
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+
+
+                    </div>
 
                 </div>
+
             </div>
             {
                 loaded ? <div className="w-full h-52 flex justify-center items-center">
                     <CircularProgress size="lg" color="warning" aria-label="Loading..." />
                 </div> :
                     data.length === 0 ?
-                        <div className="flex justify-center items-center h-52">
-                            <p className="mt-10 font-bold text-gray-500">No hay solicitudes todavia.</p>
-                        </div>
-                        :
-                        filteredData.length === 0 ?
+                        (
+                            <div className="flex justify-center items-center h-52">
+                                <p className="mt-10 font-bold text-gray-500">No hay practicas todavia.</p>
+                            </div>
+                        ) : filteredData.length === 0 ?
                             <div className="flex justify-center items-center h-52">
                                 <p className="mt-10 font-bold text-gray-500">
                                     Sin resultados.
                                 </p>
                             </div> :
-                            <Table
-                                aria-label="Example table with client side pagination"
-                                bottomContent={
-                                    <div className="flex w-full justify-center">
-                                        <Pagination
-                                            isCompact
-                                            showControls
-                                            showShadow
-                                            color="warning"
-                                            page={page}
-                                            total={pages}
-                                            onChange={(page) => setPage(page)}
-                                        />
-                                    </div>
-                                }
-                                className="h-full"
+                            <div className="w-full px-20">
+                                <Table
+                                    aria-label="Example table with client side pagination"
+                                    bottomContent={
+                                        <div className="flex w-full justify-center">
+                                            <Pagination
+                                                isCompact
+                                                showControls
+                                                showShadow
+                                                color="warning"
+                                                page={page}
+                                                total={pages}
+                                                onChange={(page) => {
+                                                    setPage(page);
+                                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                }}
+                                            />
+                                        </div>
+                                    }
+                                    className="h-full w-full "
+                                >
+                                    <TableHeader >
+                                        <TableColumn className="text-center font-bold">
+                                            Practica
+                                        </TableColumn>
+                                        <TableColumn className="text-center font-bold">
+                                            Asignatura
+                                        </TableColumn>
+                                        <TableColumn className="text-center font-bold">
+                                            Cuatrimestre y grupo
+                                        </TableColumn>
+                                        <TableColumn className="text-center font-bold">
+                                            Fecha
+                                        </TableColumn>
+                                        <TableColumn className="text-center font-bold">
+                                            Estado
+                                        </TableColumn>
+                                        <TableColumn className="text-center font-bold">
+                                            Acciones
+                                        </TableColumn>
+                                    </TableHeader>
+                                    <TableBody >
+                                        {items.map((item, index) => (
+                                            <TableRow key={index} className="text-sm uppercase">
+                                                <TableCell className=" text-xs sm:text-sm">
+                                                    {item?.practica}
+                                                </TableCell>
+                                                <TableCell className=" text-xs sm:text-sm text-center">
+                                                    {item?.asignatura?.nombre}
+                                                </TableCell>
+                                                <TableCell className=" text-xs sm:text-sm text-center">
+                                                    {item?.cuatrimestre} {item?.grupo}
+                                                </TableCell>
 
-                            >
-                                <TableHeader >
-                                    <TableColumn
-                                        className="text-center flex justify-center items-center font-bold text-sm w-96 cursor-pointer"
-                                        key="alumno"
-                                        onClick={() => {
-                                            requestSort('alumno');
-                                            setAlumnoArrow(!alumnoArrow);
-                                        }
-                                        }
-                                    >
-                                        Alumno {alumnoArrow ? <IoIosArrowUp /> : <IoIosArrowDown />}
-                                    </TableColumn>
-                                    <TableColumn
-                                        className="text-center font-bold text-sm cursor-pointer"
-                                        key="nombrePractica"
-                                        onClick={() => {
-                                            requestSort('nombrePractica');
-                                            setPracticaArrow(!practicaArrow);
-                                        }}
-                                    >
-                                        <p className="flex justify-center items-center">Practica {practicaArrow ? <IoIosArrowUp /> : <IoIosArrowDown />}</p>
-                                    </TableColumn>
-                                    <TableColumn
-                                        className="text-center font-bold text-sm cursor-pointer"
-                                        key="fechaMaterialRequerido"
-                                        onClick={() => {
-                                            requestSort('fechaMaterialRequerido');
-                                            setFechaArrow(!fechaArrow);
-                                        }}
-                                    >
-                                        <p className="flex justify-center items-center">
-                                            Fecha {fechaArrow ? <IoIosArrowUp /> : <IoIosArrowDown />}
-                                        </p>
-                                    </TableColumn>
-                                    <TableColumn
-                                        className="text-center font-bold text-sm"
-                                        key="horaMaterialRequerido"
-                                    >
-                                        Hora
-                                    </TableColumn>
-                                    <TableColumn
-                                        className="text-center font-bold text-sm"
-                                        key="acciones"
-                                    >
-                                        Acciones
-                                    </TableColumn>
-                                </TableHeader>
-                                <TableBody items={items}>
-                                    {(item) => (
-                                        <TableRow key={item._id} className="">
-                                            {(columnKey) => (
-                                                columnKey === 'acciones' ? (
-                                                    <TableCell className="text-center flex gap-2 justify-center">
+                                                <TableCell className="text-xs sm:text-sm text-center">
+                                                    {item?.fecha}
+                                                </TableCell>
 
-                                                        <Button  isIconOnly variant="flat">
-                                                            {
-                                                                <ModalLoans id={item._id} />
+                                                <TableCell className="text-xs sm:text-sm text-center">
+                                                    {item?.estado === "ACTIVO" ?
+                                                        (<span className="flex items-center justify-center" >
+                                                            <GoDotFill className="text-green-500 font-bold" /> Activo
+                                                        </span>) :
+                                                        (<span className="flex items-center justify-center" >
+                                                            <GoDotFill className="text-red-500 font-bold" /> Inactivo
+                                                        </span>)}
+                                                </TableCell>
+
+                                                <TableCell className="text-center flex gap-2 justify-center">
+
+                                                    {
+                                                        item.estado === "ACTIVO" ? (
+                                                            <Button isIconOnly variant="flat" color="default">
+                                                                <Tooltip content="Deshabilitar">
+                                                                    <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                                                        <CiLock
+                                                                            onClick={() => handleDesactivar(item._id)}
+                                                                            className="text-red-500  text-2xl" />
+                                                                    </span>
+                                                                </Tooltip>
+                                                            </Button>
+                                                        ) : (<Button isIconOnly variant="flat" color="default">
+                                                            <Tooltip content="Habilitar">
+                                                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                                                    <CiUnlock
+                                                                        onClick={() => handleActivar(item._id)}
+                                                                        className="text-green-500  text-2xl" />
+                                                                </span>
+                                                            </Tooltip>
+                                                        </Button>)
+                                                    }
+
+                                                    <Button isIconOnly variant="flat">
+                                                        {
+                                                            <ModalPracticas id={item._id} />
+                                                        }
+                                                    </Button>
+
+                                                    <Button isIconOnly variant="flat" color="warning">
+                                                        <ModalDeleteItem
+                                                            id={item._id}
+                                                            handleFunction={handleDelete}
+                                                            texto={`
+                                                                Estas apunto de eliminar la practica ${item?.practica}.
+                                                            `
                                                             }
-                                                        </Button>
-                                                        <Button  isIconOnly color="warning" variant="flat">
-                                                            {
-                                                                <ModalDeleteItem texto={`
-                                                                    Estas apunto de eliminar la solicitud ${item?.nombrePractica} del alumno ${item?.alumno?.nombre}
-                                                                    `} id={item._id}
-                                                                    handleFunction={handleDelete}
-                                                                />
-                                                            }
-                                                        </Button>
-                                                    </TableCell>
-                                                ) : (
-                                                    <TableCell className={`text-center uppercase ${columnKey === "alumno" && "w-96"}`}>{getKeyValue(item, columnKey)}</TableCell>
-                                                )
-                                            )}
-                                        </TableRow>
-                                    )}
-                                </TableBody>
-                            </Table>
+                                                        />
+                                                    </Button>
+
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
             }
         </div>
     );

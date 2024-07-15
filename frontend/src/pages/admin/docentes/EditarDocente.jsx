@@ -1,6 +1,6 @@
 import { styles } from "../../../assets/styles/global-styles";
 import { Controller, useForm } from "react-hook-form";
-import { Input, Select, SelectItem } from "@nextui-org/react";
+import { Button, Input, Select, SelectItem, Tooltip } from "@nextui-org/react";
 import { Toaster, toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { cuatrimestre } from "../../../data/cuatrimestre-grupo";
@@ -8,9 +8,9 @@ import { createAsignatura, getAllAsignaturas } from "../../../api/asignaturas";
 import React, { useEffect, useState } from "react";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { createProfesor, getProfesorById, updateProfesor } from "../../../api/profesores";
-
+import { MdPassword } from "react-icons/md";
 function EditarDocente() {
-    const { register, formState: { errors }, handleSubmit, reset, control } = useForm();
+    const { register, formState: { errors }, handleSubmit, reset, control,watch } = useForm();
     const navigate = useNavigate();
     const [pass, setPass] = React.useState(false);
     const [confirm, setConfirm] = React.useState(false);
@@ -19,6 +19,7 @@ function EditarDocente() {
     const toggleVisibilityPass = () => setPass(!pass);
     const toggleVisibilityConfirm = () => setConfirm(!confirm);
     const [values, setValues] = React.useState(new Set([]));
+    const [editPass, setEditPass] = useState(false);
 
     const onSubmit = handleSubmit(async (values) => {
         let { materias, nombre, correo } = values;
@@ -30,7 +31,10 @@ function EditarDocente() {
         const data = {
             nombre,
             correo,
-            materias: mat
+            materias: mat,
+        }
+        if(editPass){
+            data.password = values.password;
         }
         try {
             const res = await updateProfesor(params.id, data);
@@ -156,6 +160,79 @@ function EditarDocente() {
                             )}
                         />
 
+                        {
+                            editPass && (
+                                <div className="w-full flex flex-col gap-2">
+                                    <Input
+                                        label="Contraseña"
+                                        variant="bordered"
+                                        isInvalid={errors.password ? true : false}
+                                        errorMessage={errors?.password?.message}
+                                        endContent={
+                                            <button className="focus:outline-none" type="button" onClick={toggleVisibilityPass}>
+                                                {pass ? (
+                                                    <IoEyeOff className="text-2xl text-default-400 pointer-events-none" />
+                                                ) : (
+                                                    <IoEye className="text-2xl text-default-400 pointer-events-none" />
+                                                )}
+                                            </button>
+                                        }
+                                        type={pass ? "text" : "password"}
+                                        {
+                                        ...register("password", {
+                                            required: {
+                                                value: true,
+                                                message: "La contraseña es requerida."
+                                            },
+                                            minLength: {
+                                                value: 6,
+                                                message: "La contraseña debe contener al menos 6 caracteres."
+                                            },
+                                            pattern: {
+                                                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+/,
+                                                message: "La contraseña debe contener al menos una minuscula, un mayuscula y un numero"
+                                            }
+                                        })
+                                        }
+                                    />
+                                    <Input
+                                        label="Confirmar contraseña"
+                                        variant="bordered"
+                                        isInvalid={errors.confirm ? true : false}
+                                        errorMessage={errors?.confirm?.message}
+                                        endContent={
+                                            <button className="focus:outline-none" type="button" onClick={toggleVisibilityConfirm}>
+                                                {confirm ? (
+                                                    <IoEyeOff className="text-2xl text-default-400 pointer-events-none" />
+                                                ) : (
+                                                    <IoEye className="text-2xl text-default-400 pointer-events-none" />
+                                                )}
+                                            </button>
+                                        }
+                                        type={confirm ? "text" : "password"}
+                                        {
+                                        ...register("confirm", {
+                                            required: {
+                                                value: true,
+                                                message: "La contraseña es requerida."
+                                            },
+                                            validate: value => value === watch("password") || "Las contraseñas no coinciden"
+                                        })
+                                        }
+                                    />
+                                </div>
+                            )
+                        }
+
+                        <div className="w-full flex justify-end ">
+                            <Button isIconOnly onClick={() => setEditPass(!editPass)} className="" type="button" variant="solid" color="default">
+                                <Tooltip content={editPass ? "Cancelar" : "Editar contraseña"}>
+                                    <span>
+                                        <MdPassword />
+                                    </span>
+                                </Tooltip>
+                            </Button>
+                        </div>
 
 
                     </div>
