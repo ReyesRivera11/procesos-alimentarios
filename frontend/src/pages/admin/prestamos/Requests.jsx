@@ -78,7 +78,7 @@ const Requests = () => {
                 setData(data.filter(item => item._id !== id));
             }
         } catch (error) {
-            console.log(error);
+            toast.error(error.response.data.message);
         }
     };
     const handleAcceptRequest = async (id) => {

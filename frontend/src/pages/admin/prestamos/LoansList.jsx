@@ -18,7 +18,7 @@ import { useAuth } from "../../../context/auth-context";
 import ModalLoans from "../../../components/ModalLoans";
 import { BsCalendar2Date } from "react-icons/bs";
 const LoanList = () => {
-    const { user,token } = useAuth();
+    const { token } = useAuth();
     const [data, setData] = React.useState([]);
     const [loaded, setLoaded] = React.useState(true);
     const [filteredData, setFilteredData] = React.useState([]);

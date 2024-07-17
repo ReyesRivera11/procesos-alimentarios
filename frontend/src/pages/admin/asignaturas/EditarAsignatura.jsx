@@ -22,8 +22,8 @@ function EditarAsignatura() {
     const onSubmit = handleSubmit(async (values) => {
         const { cuatrimestre, nombre } = values;
         const newData = {
-            cuatrimestre,
-            nombre
+            cuatrimestre:cuatrimestre.toUpperCase(),
+            nombre:nombre.toUpperCase(),
         }
         try {
             const res = await updateAsignatura(params.id, newData,token);
