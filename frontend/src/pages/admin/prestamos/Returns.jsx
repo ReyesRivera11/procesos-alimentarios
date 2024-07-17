@@ -6,9 +6,11 @@ import ModalLoans from "../../../components/ModalLoans";
 import { Toaster, toast } from 'sonner';
 import ModalAccept from "../../../components/ModalAccept";
 import { CircularProgress } from "@nextui-org/react";
+import { useAuth } from "../../../context/auth-context";
 
 const Returns = () => {
     const [data, setData] = React.useState([]);
+    const {token} = useAuth();
     const [loaded, setLoaded] = React.useState(true);
     const [filteredData, setFilteredData] = React.useState([]);
     const [page, setPage] = React.useState(1);
@@ -24,7 +26,7 @@ const Returns = () => {
 
     useEffect(() => {
         const getAllLoans = async () => {
-            const res = await getAllLoansToReturn();
+            const res = await getAllLoansToReturn(token);
             if (res) {
                 setLoaded(false);
                 setData(res.data);
@@ -62,7 +64,7 @@ const Returns = () => {
     const getKeyValue = (item, columnKey) => {
         // Handle nested fields
         if (columnKey === 'alumno' && typeof item[columnKey] === 'object') {
-            return item[columnKey].nombre;
+            return item[columnKey]?.nombre;
         }
         if (columnKey === 'entregado') {
              return item[columnKey] ? "Entregado":"Pendiente"
@@ -73,7 +75,7 @@ const Returns = () => {
 
     const handleAcceptRequest = async (id) => {
         try {
-            const res = await confirmReturn({ devuelto: true, id });
+            const res = await confirmReturn({ devuelto: true, id },token);
             if (res) {
                 toast.success('Devolución registrada correctamente.');
                 setData(data.filter(item => item._id !== id));

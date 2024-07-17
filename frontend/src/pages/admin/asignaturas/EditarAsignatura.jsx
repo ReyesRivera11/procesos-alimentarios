@@ -5,9 +5,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { cuatrimestre } from "../../../data/cuatrimestre-grupo";
 import { getAsignaturaById, updateAsignatura } from "../../../api/asignaturas";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../../context/auth-context";
 
 function EditarAsignatura() {
     const navigate = useNavigate();
+    const {token} = useAuth();
     const params = useParams();
     const [data, setData] = useState();
     const { control, formState: { errors }, handleSubmit, reset } = useForm({
@@ -24,8 +26,8 @@ function EditarAsignatura() {
             nombre
         }
         try {
-            const res = await updateAsignatura(params.id, newData);
-            if (res) {
+            const res = await updateAsignatura(params.id, newData,token);
+                if (res) {
                 toast.success("Asignatura editada correctamente.");
                 setTimeout(() => {
                     navigate("/asignaturas");
@@ -38,7 +40,7 @@ function EditarAsignatura() {
 
     useEffect(() => {
         const getAsignatura = async () => {
-            const res = await getAsignaturaById(params.id);
+            const res = await getAsignaturaById(params.id,token);
             if (res) {
                 setData(res.data);
                 reset(res.data);

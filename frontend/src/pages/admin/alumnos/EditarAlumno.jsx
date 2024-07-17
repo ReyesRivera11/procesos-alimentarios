@@ -6,9 +6,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { allGrupos, cuatrimestre } from "../../../data/cuatrimestre-grupo";
 import { createAlumno, getAlumnoById, updateAlumno } from "../../../api/alumnos";
 import React, { useEffect } from "react";
-
+import {useAuth} from "../../../context/auth-context";
 function EditarAlumno() {
     const params = useParams();
+    const {token} = useAuth();
     const { control, formState: { errors }, handleSubmit, reset } = useForm({
         defaultValues: {
             nombre: "",
@@ -31,7 +32,7 @@ function EditarAlumno() {
                 grupo:values.grupo
             };
 
-            const res = await updateAlumno(params.id,data);
+            const res = await updateAlumno(params.id,data,token);
             if (res) {
                 toast.success("El alumno se edito correctamente.");
                 setTimeout(() => {
@@ -42,13 +43,12 @@ function EditarAlumno() {
             }
         } catch (error) {
             toast.error(error.response.data.message);
-            console.log(error.response.data.message);
         }
     });
 
     useEffect(() => {
         const getAlumnos = async () => {
-            const res = await getAlumnoById(params.id);
+            const res = await getAlumnoById(params.id,token);
             if (res) {
                 reset(res.data);
             }

@@ -17,16 +17,17 @@ export const AuthProvider = ({ children }) => {
     const [auth, setAuth] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [token,setToken] = useState();
     useEffect(() => {
         verifyAuth();
     }, [])
-    
     const loginAlumno = async (data) => {
             try {
             const res = await login(data);
             if (res) {
                 setUser(res.data.user);
                 localStorage.setItem("token", res.data.token);
+                setToken(res.data.token);
                 setAuth(true);
                 return res.data.user;
             }
@@ -53,6 +54,7 @@ export const AuthProvider = ({ children }) => {
                 setUser(res.data);
                 setAuth(true);
                 setLoading(false);
+                setToken(token);
             } else {
                 setLoading(false);
                 setAuth(false);
@@ -83,7 +85,8 @@ export const AuthProvider = ({ children }) => {
                 loginAlumno,
                 auth,
                 loading,
-                signOut
+                signOut,
+                token
             }}
         >
             {children}

@@ -8,7 +8,8 @@ import ModalDeleteItem from "../../../components/ModalDeleteItem";
 import { IoMdAdd } from "react-icons/io";
 import { GoListOrdered } from "react-icons/go";
 import { deleteProfesor, getAllProfesores } from "../../../api/profesores";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import {useAuth} from "../../../context/auth-context"
 const Docentes = () => {
     const [data, setData] = React.useState([]);
     const [loaded, setLoaded] = React.useState(true);
@@ -16,6 +17,7 @@ const Docentes = () => {
     const [page, setPage] = React.useState(1);
     const [filterValue, setFilterValue] = React.useState("");
     const [sortOrder, setSortOrder] = React.useState("default");
+    const {token} = useAuth();
     const navigate = useNavigate();
     const rowsPerPage = 10;
     const pages = Math.ceil(filteredData.length / rowsPerPage);
@@ -27,7 +29,7 @@ const Docentes = () => {
 
     useEffect(() => {
         const getAlumnos = async () => {
-            const res = await getAllProfesores();
+            const res = await getAllProfesores(token);
             if (res) {
                 setLoaded(false);
                 setData(res.data);
@@ -65,7 +67,7 @@ const Docentes = () => {
 
     const handleDelete = async (id) => {
         try {
-            const res = await deleteProfesor(id);
+            const res = await deleteProfesor(id,token);
             if (res) {
                 toast.success("Docente eliminado correctamente.");
                 setData(data.filter(item => item._id !== id));

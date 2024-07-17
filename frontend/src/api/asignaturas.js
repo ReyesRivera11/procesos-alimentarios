@@ -1,11 +1,31 @@
 import axios from "./axios";
 
-export const createAsignatura = (data) => axios.post("/asignaturas",data);
+export const createAsignatura = (data,token) => axios.post("/asignaturas", data, {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    }
+});
 
-export const getAllAsignaturas = () => axios.get("/asignaturas");
+export const getAllAsignaturas = (token) => axios.get("/asignaturas", {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    }
+});
 
-export const getAsignaturaById = id => axios.get(`/asignaturas/${id}`);
+export const getAsignaturaById = (id, token) => axios.get(`/asignaturas/${id}`, {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    }
+});
 
-export const updateAsignatura = (id,data) => axios.patch(`/asignaturas/${id}`,data);
+export const updateAsignatura = (id, data, token) => axios.patch(`/asignaturas/${id}`, data, {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    }
+});
 
-export const deleteAsignatura = (id) => axios.delete(`/asignaturas/${id}`);
+export const deleteAsignatura = (id,token) => axios.delete(`/asignaturas/${id}`, {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    }
+});

@@ -6,13 +6,14 @@ import { allGrupos, cuatrimestre } from "../../../data/cuatrimestre-grupo";
 import React, { useEffect, useState } from "react";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { createAlumno } from "../../../api/alumnos";
+import {useAuth} from "../../../context/auth-context"
 
 function AgregarAlumno() {
     const { register, formState: { errors }, handleSubmit, watch } = useForm();
     const navigate = useNavigate();
     const [pass, setPass] = React.useState(false);
     const [confirm, setConfirm] = React.useState(false);
-
+    const {token} = useAuth();
     const toggleVisibilityPass = () => setPass(!pass);
     const toggleVisibilityConfirm = () => setConfirm(!confirm);
     const onSubmit = handleSubmit(async (values) => {
@@ -22,10 +23,8 @@ function AgregarAlumno() {
                 ...values,
                 nombre: values.nombre.toUpperCase(),
             };
-
-            console.log(data);
             
-            const res = await createAlumno(data);
+            const res = await createAlumno(data,token);
             if (res) {
                 toast.success("El alumno se creo correctamente.");
                 setTimeout(() => {

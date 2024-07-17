@@ -1,11 +1,31 @@
 import axios from "./axios"
 
-export const getAllAlumnos = () => axios.get("/alumnos");
+export const getAllAlumnos = (token) => axios.get("/alumnos", {
+    headers: {
+        "Authorization": `Bearer ${token}`
+    }
+});
 
-export const createAlumno = (data) => axios.post("/alumnos",data);
+export const createAlumno = (data,token) => axios.post("/alumnos", data, {
+    headers: {
+        "Authorization": `Bearer ${token}`
+    }
+});
 
-export const getAlumnoById = (id) => axios.get(`/alumnos/${id}`)
+export const getAlumnoById = (id,token) => axios.get(`/alumnos/${id}`, {
+    headers: {
+        "Authorization": `Bearer ${token}`
+    }
+})
 
-export const updateAlumno = (id,data) => axios.patch(`/alumnos/${id}`,data);
+export const updateAlumno = (id, data,token) => axios.patch(`/alumnos/${id}`, data, {
+    headers: {
+        "Authorization": `Bearer ${token}`
+    }
+});
 
-export const deleteAlumno = (id) => axios.delete(`/alumnos/${id}`);
+export const deleteAlumno = (id,token) => axios.delete(`/alumnos/${id}`, {
+    headers: {
+        "Authorization": `Bearer ${token}`
+    }
+});

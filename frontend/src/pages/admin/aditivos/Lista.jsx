@@ -8,7 +8,8 @@ import { CiEdit } from "react-icons/ci";
 import ModalDeleteItem from "../../../components/ModalDeleteItem";
 import { IoMdAdd } from "react-icons/io";
 import { GoListOrdered } from "react-icons/go";
-import {useNavigate} from "react-router-dom"
+import {useNavigate} from "react-router-dom";
+import {useAuth} from "../../../context/auth-context"
 const Lista = () => {
     const [data, setData] = React.useState([]);
     const [loaded, setLoaded] = React.useState(true);
@@ -17,6 +18,7 @@ const Lista = () => {
     const [filterValue, setFilterValue] = React.useState("");
     const [sortOrder, setSortOrder] = React.useState("default");
     const navigate = useNavigate();
+    const {token} = useAuth();
     const rowsPerPage = 10;
     const pages = Math.ceil(filteredData.length / rowsPerPage);
     const items = React.useMemo(() => {
@@ -69,7 +71,7 @@ const Lista = () => {
 
     const handleDelete = async (id) => {
         try {
-            const res = await deleteAditivo(id);
+            const res = await deleteAditivo(id,token);
             if (res) {
                 toast.success("Aditivo eliminado correctamente.");
                 setData(data.filter(item => item._id !== id));

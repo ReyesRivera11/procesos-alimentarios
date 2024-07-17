@@ -5,8 +5,10 @@ import { Toaster, toast } from "sonner";
 import { useNavigate } from "react-router-dom"
 import { cuatrimestre } from "../../../data/cuatrimestre-grupo";
 import { createAsignatura } from "../../../api/asignaturas";
+import { useAuth } from "../../../context/auth-context";
 function AgregarAsignatura() {
     const { register, formState: { errors }, handleSubmit, watch } = useForm();
+    const {token} = useAuth();
     const navigate = useNavigate();
     const onSubmit = handleSubmit(async (values) => {
         try {
@@ -15,7 +17,7 @@ function AgregarAsignatura() {
                 nombre:values.nombre.toUpperCase(),
             }
 
-            const res = await createAsignatura(data);
+            const res = await createAsignatura(data,token);
             if (res) {
                 toast.success("La asignatura se creo correctamente.");
                 setTimeout(() => {

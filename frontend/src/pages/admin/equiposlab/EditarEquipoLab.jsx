@@ -4,6 +4,7 @@ import { Toaster, toast } from "sonner";
 import { createEquipoLab,getEquipoLabById,updateEquipoLab } from "../../../api/materiales";
 import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react";
+import { useAuth } from "../../../context/auth-context";
 function EditarEquipoLab() {
     const params = useParams();
     const { control, formState: { errors }, handleSubmit, reset } = useForm({
@@ -12,22 +13,18 @@ function EditarEquipoLab() {
             cantidad:''
         }
     });
+    const {token} = useAuth();
     const navigate = useNavigate();
     const [data,setData]= useState([]);
     const onSubmit = handleSubmit(async (values) => {
-        const {nombre,cantidad}= values;
-        const newData={
-            nombre,cantidad
-        }
-        console.log(newData);
         try {
             const newData = {
                 nombre: values.nombre.toUpperCase(),
                 cantidad: parseInt(values.cantidad)
             }
-            const res = await updateEquipoLab(params.id, newData);
+            const res = await updateEquipoLab(params.id, newData,token);
             if (res) {
-                toast.success("El equipo se editó.");
+                toast.success("El equipo se editó correctamente.");
                 setTimeout(() => {
                     navigate("/equipos-lab");
                 }, 1000);

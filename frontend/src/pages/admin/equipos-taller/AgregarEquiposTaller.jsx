@@ -5,10 +5,12 @@ import { Select, SelectItem } from "@nextui-org/react";
 import { Toaster, toast } from "sonner";
 import { createEquipoTaller } from "../../../api/materiales";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/auth-context";
 
 function AgregarEquiposTaller() {
     const { register, formState: { errors }, handleSubmit, watch } = useForm();
     const navigate = useNavigate();
+    const {token} = useAuth();
     const onSubmit = handleSubmit(async (values) => {
         try {
             const data = {
@@ -16,11 +18,10 @@ function AgregarEquiposTaller() {
                 nombre: values.nombre.toUpperCase(),
                 enUso:values.enUso == "true" ? true : false
             }
-            console.log(data);
 
-            const res = await createEquipoTaller(data);
+            const res = await createEquipoTaller(data,token);
             if (res) {
-                toast.success("El equipo de taller se agrego.");
+                toast.success("El equipo de taller se agrego correctamente.");
                 setTimeout(() => {
                     navigate("/equipos-taller");
                 }, 2000);

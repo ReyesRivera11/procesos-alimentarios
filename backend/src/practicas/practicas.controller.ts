@@ -2,6 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Q
 import { PracticasService } from './practicas.service';
 import { CreatePracticaDto } from './dto/create-practica.dto';
 import { UpdatePracticaDto } from './dto/update-practica.dto';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { Role } from 'src/auth/roles/role.enum';
 
 @Controller('practicas')
 export class PracticasController {
@@ -18,6 +20,7 @@ export class PracticasController {
   }
 
   @Get('/practicas-disponibles')
+  @Auth(Role.ALUMNO)
   findAvailable(@Query('cuatrimestre') cuatrimestre: string, @Query('grupo') grupo: string) {
     return this.practicasService.findAvailable({ cuatrimestre, grupo });
   }

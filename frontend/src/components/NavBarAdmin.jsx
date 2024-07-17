@@ -30,7 +30,7 @@ const NavBarAdmin = () => {
                         <IoIosCloseCircle className="text-white text-3xl" />
                     </button>
                     <div className="flex flex-col items-center gap-10 text-white" onClick={() => setFlag(false)}>
-                        <NavLink to={"/inicio"}>Inicio</NavLink>
+                        <NavLink to={"/inicio-admin"}>Inicio</NavLink>
                         <NavLink to={"/asignaturas"}>Asignaturas</NavLink>
                         <NavLink to={"/docentes"}>Docentes</NavLink>
                         <NavLink to={"/alumnos"}>Alumnos</NavLink>
@@ -116,7 +116,7 @@ const NavBarAdmin = () => {
                                     Todos
                                 </DropdownItem>
                                 <DropdownItem onClick={() => {
-                                    navigate("/solicitar-material");
+                                    navigate("/solicitudes");
                                     setFlag(false);
                                 }} >
                                     Por Aceptar

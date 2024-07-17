@@ -8,14 +8,15 @@ import ModalDelete from "../../../components/ModalDelete";
 import { Toaster, toast } from 'sonner';
 import ModalAccept from "../../../components/ModalAccept";
 import { CircularProgress } from "@nextui-org/react";
+import { useAuth } from "../../../context/auth-context";
 
 const Delivered = () => {
     const [data, setData] = React.useState([]);
+    const {token} = useAuth();
     const [loaded, setLoaded] = React.useState(true);
     const [filteredData, setFilteredData] = React.useState([]);
     const [page, setPage] = React.useState(1);
     const [filterValue, setFilterValue] = React.useState("");
-    const [errorMsg, setErrorMsg] = React.useState(true);
     const rowsPerPage = 10;
     const pages = Math.ceil(filteredData.length / rowsPerPage);
     const items = React.useMemo(() => {
@@ -26,7 +27,7 @@ const Delivered = () => {
 
     useEffect(() => {
         const getAllLoans = async () => {
-            const res = await getAllLoansToDeliver();
+            const res = await getAllLoansToDeliver(token);
             if (res) {
                 setLoaded(false);
                 setData(res.data);
@@ -63,9 +64,8 @@ const Delivered = () => {
     }, []);
 
     const getKeyValue = (item, columnKey) => {
-        // Handle nested fields
         if (columnKey === 'alumno' && typeof item[columnKey] === 'object') {
-            return item[columnKey].nombre;
+            return item[columnKey]?.nombre;
         }
         if (columnKey === 'entregado') {
              return item[columnKey] ? "Entregado":"Pendiente"
@@ -73,20 +73,9 @@ const Delivered = () => {
         return item[columnKey];
     };
 
-    const handleRejectRequest = async (id) => {
-        try {
-            const res = await requestsVal({ aceptado: false, id });
-            if (res) {
-                toast.success("Solicitud rechazada.");
-                setData(data.filter(item => item._id !== id));
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
     const handleAcceptRequest = async (id) => {
         try {
-            const res = await acceptDelivery({ entregado: true, id });
+            const res = await acceptDelivery({ entregado: true, id },token);
             if (res) {
                 toast.success('Solicitud entregada.');
                 setData(data.filter(item => item._id !== id));
@@ -203,17 +192,6 @@ const Delivered = () => {
                                                         }
                                                     </Button>
 
-                                                    {/* <Button className="bg-transparent">
-
-                                                        {
-                                                            <ModalDelete
-                                                                handleFunction={handleRejectRequest}
-                                                                id={item?._id}
-                                                                texto={`La solicitud de la practica ${item?.nombrePractica} del alumno ${item?.alumno?.nombre} será rechazada. `}
-                                                            />
-                                                        }
-
-                                                    </Button> */}
                                                 </TableCell>
                                             ) : (
                                                 <TableCell className={`text-center uppercase ${columnKey === "alumno" && "w-96"}`}>{getKeyValue(item, columnKey)}</TableCell>

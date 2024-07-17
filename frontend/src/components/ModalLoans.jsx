@@ -6,9 +6,11 @@ import UthhLogo from "../assets/images/uthh-logo.png";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
 
 import { getLoansById } from '../api/loans';
+import { useAuth } from '../context/auth-context';
 
 const ModalLoans = ({ id }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const {token} = useAuth();
     const [size, setSize] = React.useState('md');
     const [data, setData] = useState({});
     const handleOpen = (size) => {
@@ -18,7 +20,7 @@ const ModalLoans = ({ id }) => {
 
     useEffect(() => {
         const getLoan = async () => {
-            const res = await getLoansById(id);
+            const res = await getLoansById(id,token);
             if (res) {
                 setData(res.data);
             }

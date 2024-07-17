@@ -9,8 +9,10 @@ import ModalDeleteItem from "../../../components/ModalDeleteItem";
 import { IoMdAdd } from "react-icons/io";
 import { GoListOrdered } from "react-icons/go";
 import {useNavigate} from "react-router-dom"
+import { useAuth } from "../../../context/auth-context";
 const MaterialesAlmacen = () => {
     const [data, setData] = React.useState([]);
+    const {token} = useAuth();
     const [loaded, setLoaded] = React.useState(true);
     const [filteredData, setFilteredData] = React.useState([]);
     const [page, setPage] = React.useState(1);
@@ -70,7 +72,7 @@ const MaterialesAlmacen = () => {
 
     const handleDelete = async (id) => {
         try {
-            const res = await deleteMaterialInventario(id);
+            const res = await deleteMaterialInventario(id,token);
             if (res) {
                 toast.success("Material eliminado correctamente.");
                 setData(data.filter(item => item._id !== id));

@@ -10,7 +10,8 @@ import { GoListOrdered } from "react-icons/go";
 import { SiLevelsdotfyi } from "react-icons/si";
 import { grupos, niveles } from "../../../data/cuatrimestre-grupo"
 import { deleteAsignatura, getAllAsignaturas } from "../../../api/asignaturas";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import {useAuth} from "../../../context/auth-context"
 const Asignaturas = () => {
     const [data, setData] = React.useState([]);
     const [loaded, setLoaded] = React.useState(true);
@@ -19,6 +20,7 @@ const Asignaturas = () => {
     const [filterValue, setFilterValue] = React.useState("");
     const [sortOrder, setSortOrder] = React.useState("default");
     const [semesterFilter, setSemesterFilter] = React.useState("all");
+    const {token} = useAuth();
     const rowsPerPage = 10;
     const pages = Math.ceil(filteredData.length / rowsPerPage);
     const items = React.useMemo(() => {
@@ -29,7 +31,7 @@ const Asignaturas = () => {
     const navigate = useNavigate();
     useEffect(() => {
         const getAsignaturas = async () => {
-            const res = await getAllAsignaturas();
+            const res = await getAllAsignaturas(token);
             if (res) {
                 setLoaded(false);
                 setData(res.data);
@@ -69,7 +71,7 @@ const Asignaturas = () => {
 
     const handleDelete = async (id) => {
         try {
-            const res = await deleteAsignatura(id);
+            const res = await deleteAsignatura(id,token);
             if (res) {
                 toast.success("Asignatura eliminada correctamente.");
                 setData(data.filter(item => item._id !== id));

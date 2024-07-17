@@ -2,16 +2,16 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ConflictException, N
 import { AlumnosService } from './alumnos.service';
 import { CreateAlumnoDto } from './dto/create-alumno.dto';
 import { ChangePasswordDto, UpdateAlumnoDto } from './dto/update-alumno.dto';
-import { AuthController } from 'src/auth/auth.controller';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { Role } from 'src/auth/roles/role.enum';
 
 @Controller('alumnos')
 export class AlumnosController {
   constructor(private readonly alumnosService: AlumnosService) { }
 
   @Post()
+  @Auth(Role.ADMIN)
   async create(@Body() createAlumnoDto: CreateAlumnoDto) {
-    console.log(createAlumnoDto)
     try {
       return await this.alumnosService.create(createAlumnoDto);
     } catch (error) {
@@ -21,11 +21,13 @@ export class AlumnosController {
   }
 
   @Get()
+  @Auth(Role.ADMIN)
   findAll() {
     return this.alumnosService.findAll();
   }
 
   @Get(':id')
+  @Auth(Role.ADMIN)
   async findOne(@Param('id') id: string) {
     const res = await this.alumnosService.findOne(id);
     if (!res) throw new NotFoundException("El alumno no se encuentra registrado.")
@@ -33,7 +35,7 @@ export class AlumnosController {
   }
 
   @Patch(':id')
-  // @UseGuards(AuthGuard)
+  @Auth(Role.ADMIN)
   async update(@Param('id') id: string, @Body() updateAlumnoDto: UpdateAlumnoDto) {
     try {
       const res = await this.alumnosService.update(id, updateAlumnoDto)
@@ -47,7 +49,7 @@ export class AlumnosController {
   }
 
   @Patch("/changePassword/:id")
-  // @UseGuards(AuthGuard)
+  @Patch(Role.ALUMNO)
   async changePassword(@Param("id") id: string, @Body() changePasswordVal: ChangePasswordDto) {
     try {
       const res = await this.alumnosService.changePassword(id, changePasswordVal);
@@ -63,6 +65,7 @@ export class AlumnosController {
   }
 
   @Delete(':id')
+  @Auth(Role.ADMIN)
   async remove(@Param('id') id: string) {
     const res = await this.alumnosService.remove(id);
     if (!res) throw new NotFoundException("El alumno no se encuentra registrado");

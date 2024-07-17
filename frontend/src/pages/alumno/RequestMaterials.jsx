@@ -10,14 +10,14 @@ import { useAuth } from '../../context/auth-context';
 import { practicasDisponibles } from '../../api/practicas';
 import { CircularProgress } from '@nextui-org/react';
 import { createLoans } from '../../api/loans';
+import { useNavigate } from 'react-router-dom';
 
 const RequestMaterials = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
     const [practica, setPractica] = useState({});
-    const { user } = useAuth();
+    const { user,token } = useAuth();
     const [practicas, setPracticas] = useState([]);
     const [hora, setHora] = useState(new Time(7, 0));
-    const [date, setDate] = useState(today(getLocalTimeZone()));
     const [errorText, setErrorText] = useState("");
     const [equipoLab, setEquipoLab] = useState(new Set());
     const [quantities, setQuantities] = useState([]);
@@ -29,8 +29,6 @@ const RequestMaterials = () => {
         setEquipoLab(newKeys);
         updateQuantities(newKeys);
     };
-
-
 
     const updateQuantities = (newEquipoLab) => {
         const updatedQuantities = [];
@@ -107,7 +105,7 @@ const RequestMaterials = () => {
         minute = minute < 10 ? '0' + minute : minute;
         return `${hour}:${minute} ${ampm}`;
     };
-
+    const navigate = useNavigate();
     const onSubmit = handleSubmit(async (values) => {
         if (quantities.length === 0 || Object.keys(quantityErrors).length > 0) {
             setMatErros("Debes seleccionar al menos un material.");
@@ -125,11 +123,13 @@ const RequestMaterials = () => {
                 horaMaterialRequerido:formatTime(hora),
                 asignatura:practica?.asignatura?._id
             };
-            console.log(newData)
             try {
-                const res = await createLoans(newData);
+                const res = await createLoans(newData,token);
                 if(res){
                     toast.success("La solicitud ha sido enviada.");
+                    setTimeout(() => {
+                        navigate("/solicitudes-alumno");
+                    }, 1000);
                 }
             } catch (error) {
                 console.log(error.response.data.message);
@@ -137,9 +137,8 @@ const RequestMaterials = () => {
         }
     });
     useEffect(() => {
-
         const getAllMaterials = async () => {
-            const practicasApi = await practicasDisponibles({ cuatrimestre: user.cuatrimestre, grupo: user.grupo });
+            const practicasApi = await practicasDisponibles({ cuatrimestre: user.cuatrimestre, grupo: user.grupo },token);
             setPracticas(practicasApi.data);
              setLoad(false);
         };

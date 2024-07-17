@@ -2,12 +2,15 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ConflictException, N
 import { MaterialLabService } from './material-lab.service';
 import { CreateMaterialLabDto } from './dto/create-material-lab.dto';
 import { UpdateMaterialLabDto } from './dto/update-material-lab.dto';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { Role } from 'src/auth/roles/role.enum';
 
 @Controller('material-lab')
 export class MaterialLabController {
   constructor(private readonly materialLabService: MaterialLabService) { }
 
   @Post()
+  @Auth(Role.ADMIN)
   async create(@Body() createMaterialLabDto: CreateMaterialLabDto) {
     try {
       return await this.materialLabService.create(createMaterialLabDto);
@@ -30,6 +33,7 @@ export class MaterialLabController {
   }
 
   @Patch(':id')
+  @Auth(Role.ADMIN)
   async update(@Param('id') id: string, @Body() updateMaterialLabDto: UpdateMaterialLabDto) {
     try {
       const res = await this.materialLabService.update(id, updateMaterialLabDto);
@@ -41,6 +45,7 @@ export class MaterialLabController {
   }
 
   @Delete(':id')
+  @Auth(Role.ADMIN)
   async remove(@Param('id') id: string) {
     const res = await this.materialLabService.remove(id);
     if(!res) throw new NotFoundException("El mayterial no se encuentra registrado.");

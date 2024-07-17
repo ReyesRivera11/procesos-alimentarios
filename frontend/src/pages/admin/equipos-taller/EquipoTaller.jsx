@@ -14,6 +14,7 @@ import { SiLevelsdotfyi } from "react-icons/si";
 import { grupos, niveles } from "../../../data/cuatrimestre-grupo";
 import { useNavigate } from "react-router-dom";
 import { deleteEquipoTaller, getAllEquipoTaller } from "../../../api/materiales";
+import { useAuth } from "../../../context/auth-context";
 const EquiposTaller = () => {
     const [data, setData] = React.useState([]);
     const [loaded, setLoaded] = React.useState(true);
@@ -23,6 +24,7 @@ const EquiposTaller = () => {
     const [sortOrder, setSortOrder] = React.useState("default");
     const [estado, setestado] = React.useState("all");
     const [enUso, setenUso] = React.useState("all");
+    const {token} = useAuth();
     const navigate = useNavigate();
     const rowsPerPage = 10;
     const pages = Math.ceil(filteredData.length / rowsPerPage);
@@ -75,13 +77,13 @@ const EquiposTaller = () => {
 
     const handleDelete = async (id) => {
         try {
-            const res = await deleteEquipoTaller(id);
+            const res = await deleteEquipoTaller(id,token);
             if (res) {
                 toast.success("Equipo eliminado correctamente.");
                 setData(data.filter(item => item._id !== id));
             }
         } catch (error) {
-            console.log(error);
+            toast.error(error.response.data.message)
         }
     };
 

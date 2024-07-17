@@ -30,14 +30,15 @@ const AlumnosLista = () => {
         return filteredData.slice(start, end);
     }, [page, filteredData]);
 
+    const token = localStorage.getItem('token');
     useEffect(() => {
         const getAlumnos = async () => {
-            const res = await getAllAlumnos();
+            const res = await getAllAlumnos(token);
             if (res) {
                 setLoaded(false);
                 setData(res.data);
                 setFilteredData(res.data);
-            }
+            };
             setLoaded(false);
         };
         getAlumnos();
@@ -73,7 +74,7 @@ const AlumnosLista = () => {
 
     const handleDelete = async (id) => {
         try {
-            const res = await deleteAlumno(id);
+            const res = await deleteAlumno(id,token);
             if (res) {
                 toast.success("Alumno eliminado correctamente.");
                 setData(data.filter(item => item._id !== id));

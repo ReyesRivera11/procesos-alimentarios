@@ -4,17 +4,18 @@ import { useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
 import { createMaterialInventario } from "../../../api/materiales";
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "../../../context/auth-context";
 function AgregarMaterialAlmacen() {
     const { register, formState: { errors }, handleSubmit, watch } = useForm();
     const navigate = useNavigate();
+    const {token} = useAuth();
     const onSubmit = handleSubmit(async (values) => {
         try {
-            console.log(values)
             const data = {
                 nombre: values.nombre.toUpperCase(),
                 existencias: parseInt(values.existencias)
             }
-            const res = await createMaterialInventario(data);
+            const res = await createMaterialInventario(data,token);
             if (res) {
                 toast.success("El material se agrego correctamente.");
                 setTimeout(() => {

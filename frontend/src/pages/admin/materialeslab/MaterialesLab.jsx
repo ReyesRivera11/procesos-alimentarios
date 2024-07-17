@@ -9,6 +9,7 @@ import ModalDeleteItem from "../../../components/ModalDeleteItem";
 import { IoMdAdd } from "react-icons/io";
 import { GoListOrdered } from "react-icons/go";
 import {useNavigate} from "react-router-dom"
+import { useAuth } from "../../../context/auth-context";
 const MaterialesLab = () => {
     const [data, setData] = React.useState([]);
     const [loaded, setLoaded] = React.useState(true);
@@ -17,6 +18,7 @@ const MaterialesLab = () => {
     const [filterValue, setFilterValue] = React.useState("");
     const [sortOrder, setSortOrder] = React.useState("default");
     const navigate = useNavigate();
+    const {token} = useAuth();
     const rowsPerPage = 10;
     const pages = Math.ceil(filteredData.length / rowsPerPage);
     const items = React.useMemo(() => {
@@ -69,7 +71,7 @@ const MaterialesLab = () => {
 
     const handleDelete = async (id) => {
         try {
-            const res = await deleteMaterialLab(id);
+            const res = await deleteMaterialLab(id,token);
             if (res) {
                 toast.success("Material eliminado correctamente.");
                 setData(data.filter(item => item._id !== id));

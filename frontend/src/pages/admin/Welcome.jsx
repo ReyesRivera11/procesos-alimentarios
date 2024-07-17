@@ -12,7 +12,7 @@ const WelcomeAdmin = () => {
         >
           <p className='text-center font-bold'>BIENVENIDO</p>
           <p className='uppercase'>{user?.nombre} {user?.apellidos}</p>
-          <p className='uppercase'>Admin del plantel</p>
+          <p className='uppercase'>Administrador de inventarios.</p>
         </div>
       </div>
     </>

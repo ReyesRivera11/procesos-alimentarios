@@ -1,24 +1,68 @@
 import axios from "./axios";
 
 
-export const getAllLoansApi = () => axios.get("/prestamos");
+export const getAllLoansApi = (token) => axios.get("/prestamos", {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    }
+});
 
-export const createLoans = (data) => axios.post("/prestamos",data);
+export const createLoans = (data, token) => axios.post("/prestamos", data, {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    }
+});
 
-export const getLoansById = (id) => axios.get(`/prestamos/${id}`);
+export const getLoansById = (id, token) => axios.get(`/prestamos/${id}`, {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    }
+});
 
-export const getLoansByAlumno = (id) => axios.get(`/prestamos/prestamos-alumno/${id}`);
+export const getLoansByAlumno = (id, token) => axios.get(`/prestamos/prestamos-alumno/${id}`, {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    }
+});
 
-export const getAllRequests = () => axios.get(`/prestamos/get-requests`);
+export const getAllRequests = (token) => axios.get(`/prestamos/get-requests`, {
+    headers: {
+        "Authorization": `Bearer ${token}`
+    }
+});
 
-export const requestsVal = data => axios.put(`/prestamos/accept-request`,data);
+export const requestsVal = (data,token) => axios.put(`/prestamos/accept-request`, data, {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    }
+});
 
-export const getAllLoansToDeliver = () => axios.get(`/prestamos/get-not-deliveries`);
+export const getAllLoansToDeliver = (token) => axios.get(`/prestamos/get-not-deliveries`, {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    }
+});
 
-export const acceptDelivery = (data) => axios.put(`/prestamos/confirm-delivery`,data);
+export const acceptDelivery = (data,token) => axios.put(`/prestamos/confirm-delivery`, data, {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    }
+});
 
-export const getAllLoansToReturn = () => axios.get("/prestamos/get-not-return");
+export const getAllLoansToReturn = (token) => axios.get("/prestamos/get-not-return", {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    }
+});
 
-export const confirmReturn = (data) => axios.put(`/prestamos/confirm-return`,data);
+export const confirmReturn = (data,token) => axios.put(`/prestamos/confirm-return`, data, {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    }
+});
 
-export const deleteLoan = (id) => axios.delete(`/prestamos/${id}`);
+export const deleteLoan = (id,token) => axios.delete(`/prestamos/${id}`, {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    }
+});

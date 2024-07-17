@@ -5,6 +5,7 @@ import { Toaster, toast } from "sonner";
 import { createMaterialInventario,getMaterialInventarioById,updateMaterialInventario } from "../../../api/materiales";
 import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react";
+import { useAuth } from "../../../context/auth-context";
 function EditarMaterialAlmacen() {
     const params = useParams();
     const { control, formState: { errors }, handleSubmit, reset } = useForm({
@@ -13,19 +14,16 @@ function EditarMaterialAlmacen() {
             existencias:''
         }
     });
+    const {token} = useAuth();
     const navigate = useNavigate();
     const [data,setData]= useState([]);
     const onSubmit = handleSubmit(async (values) => {
-        const {nombre, existencias}= values;
-        const newData={
-            nombre,existencias
-        }
         try {
             const newData = {
                 nombre: values.nombre.toUpperCase(),
                 existencias: parseInt(values.existencias)
             }
-            const res = await updateMaterialInventario(params.id,newData);
+            const res = await updateMaterialInventario(params.id,newData,token);
             if (res) {
                 toast.success("El material se editó correctamente.");
                 setTimeout(() => {

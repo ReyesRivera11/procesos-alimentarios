@@ -8,6 +8,7 @@ import { createAsignatura, getAllAsignaturas } from "../../../api/asignaturas";
 import React, { useEffect, useState } from "react";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { createProfesor } from "../../../api/profesores";
+import { useAuth } from "../../../context/auth-context";
 
 function AgregarDocente() {
     const { register, formState: { errors }, handleSubmit, watch } = useForm();
@@ -15,6 +16,7 @@ function AgregarDocente() {
     const [pass, setPass] = React.useState(false);
     const [confirm, setConfirm] = React.useState(false);
     const [materias,setMaterias] = useState([]);
+    const {token} = useAuth();
 
     const toggleVisibilityPass = () => setPass(!pass);
     const toggleVisibilityConfirm = () => setConfirm(!confirm);
@@ -22,7 +24,6 @@ function AgregarDocente() {
         const {materias,nombre,correo,password} = values;
         const newMaterias = materias.split(",");
         try {
-            console.log(values);
             const data = {
                 correo,
                 password,
@@ -30,7 +31,7 @@ function AgregarDocente() {
                 materias:newMaterias,
             };
 
-            const res = await createProfesor(data);
+            const res = await createProfesor(data,token);
             if (res) {
                 toast.success("El docente se creo correctamente.");
                 setTimeout(() => {
@@ -47,7 +48,7 @@ function AgregarDocente() {
 
     useEffect(() => {
         const getAsignaturas = async () => {
-            const res = await getAllAsignaturas();
+            const res = await getAllAsignaturas(token);
             if(res){
                 setMaterias(res.data)
             }

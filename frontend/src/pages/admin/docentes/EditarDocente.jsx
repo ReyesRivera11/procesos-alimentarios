@@ -9,6 +9,7 @@ import React, { useEffect, useState } from "react";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { createProfesor, getProfesorById, updateProfesor } from "../../../api/profesores";
 import { MdPassword } from "react-icons/md";
+import { useAuth } from "../../../context/auth-context";
 function EditarDocente() {
     const { register, formState: { errors }, handleSubmit, reset, control,watch } = useForm();
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ function EditarDocente() {
     const toggleVisibilityConfirm = () => setConfirm(!confirm);
     const [values, setValues] = React.useState(new Set([]));
     const [editPass, setEditPass] = useState(false);
-
+    const {token} = useAuth();
     const onSubmit = handleSubmit(async (values) => {
         let { materias, nombre, correo } = values;
         let mat = materias;
@@ -37,7 +38,7 @@ function EditarDocente() {
             data.password = values.password;
         }
         try {
-            const res = await updateProfesor(params.id, data);
+            const res = await updateProfesor(params.id, data,token);
             if (res) {
                 toast.success("Datos actualizados correctamente.");
                 setTimeout(() => {
@@ -50,13 +51,13 @@ function EditarDocente() {
     });
     useEffect(() => {
         const getAsignaturas = async () => {
-            const res = await getAllAsignaturas();
+            const res = await getAllAsignaturas(token);
             if (res) {
                 setMaterias(res.data);
             }
         };
         const getDocente = async () => {
-            const res = await getProfesorById(params.id);
+            const res = await getProfesorById(params.id,token);
             if (res) {
                 const { nombre, correo, materias } = res.data;
                 const newVal = materias.map(materia => materia._id);
@@ -64,7 +65,7 @@ function EditarDocente() {
                 reset({
                     nombre,
                     correo,
-                    materias: materias.map(materia => materia._id), // Set initial values of materias with IDs
+                    materias: materias.map(materia => materia._id), 
                 });
             }
         };
@@ -242,7 +243,7 @@ function EditarDocente() {
                             Cancelar
                         </button>
                         <button className='text-white rounded-md p-2 font-semibold w-32 bg-green-600'>
-                            Guardar
+                            Editar
                         </button>
                     </div>
                 </form>

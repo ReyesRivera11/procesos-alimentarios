@@ -10,6 +10,7 @@ export class AsignaturasController {
   constructor(private readonly asignaturasService: AsignaturasService) { }
 
   @Post()
+  @Auth(Role.ADMIN)
   async create(@Body() createAsignaturaDto: CreateAsignaturaDto) {
     try {
       return await this.asignaturasService.create(createAsignaturaDto);
@@ -21,11 +22,13 @@ export class AsignaturasController {
   }
 
   @Get()
+  @Auth(Role.ADMIN)
   findAll() {
     return this.asignaturasService.findAll();
   }
 
   @Get(':id')
+  @Auth(Role.ADMIN)
   async findOne(@Param('id') id: string) {
     const materia = await this.asignaturasService.findOne(id);
     if (!materia) throw new NotFoundException("La materia no fue encontrada");
@@ -33,6 +36,7 @@ export class AsignaturasController {
   }
 
   @Patch(':id')
+  @Auth(Role.ADMIN)
   async update(@Param('id') id: string, @Body() updateAsignaturaDto: UpdateAsignaturaDto) {
     try {
       const materia = await this.asignaturasService.update(id, updateAsignaturaDto);
@@ -46,6 +50,7 @@ export class AsignaturasController {
   }
 
   @Delete(':id')
+  @Auth(Role.ADMIN)
   async remove(@Param('id') id: string) {
     const materia = await this.asignaturasService.remove(id);
     if (!materia) throw new NotFoundException("La materia no se encuentra registrada");

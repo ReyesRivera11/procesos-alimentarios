@@ -2,12 +2,15 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ConflictException, N
 import { AditivosService } from './aditivos.service';
 import { CreateAditivoDto } from './dto/create-aditivo.dto';
 import { UpdateAditivoDto } from './dto/update-aditivo.dto';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { Role } from 'src/auth/roles/role.enum';
 
 @Controller('aditivos')
 export class AditivosController {
   constructor(private readonly aditivosService: AditivosService) { }
 
   @Post()
+  @Auth(Role.ADMIN)
   async create(@Body() createAditivoDto: CreateAditivoDto) {
     try {
       return await this.aditivosService.create(createAditivoDto)
@@ -15,9 +18,7 @@ export class AditivosController {
       if (error.code === 11000) throw new ConflictException("El aditivo ya se encuentra registrado")
       throw error;
     }
-
   }
-
   @Get()
   findAll() {
     return this.aditivosService.findAll();
@@ -31,6 +32,7 @@ export class AditivosController {
   }
 
   @Patch(':id')
+  @Auth(Role.ADMIN)
   async update(@Param('id') id: string, @Body() updateAditivoDto: UpdateAditivoDto) {
     try {
       const res = await this.aditivosService.update(id, updateAditivoDto);

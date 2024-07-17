@@ -4,6 +4,7 @@ import { Toaster, toast } from "sonner";
 import {  getAditivoById, updateAditivo } from "../../../api/materiales";
 import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react";
+import {useAuth} from "../../../context/auth-context";
 function EditarAditivo() {
     const params = useParams();
     const { control, formState: { errors }, handleSubmit, reset } = useForm({
@@ -12,6 +13,7 @@ function EditarAditivo() {
             cantidad: ''
         }
     });
+    const {token} = useAuth();
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const onSubmit = handleSubmit(async (values) => {
@@ -19,13 +21,12 @@ function EditarAditivo() {
         const newData = {
             nombre, cantidad
         }
-        console.log(newData);
         try {
             const newData = {
                 nombre: values.nombre.toUpperCase(),
                 cantidad: parseInt(values.cantidad)
             }
-            const res = await updateAditivo(params.id, newData);
+            const res = await updateAditivo(params.id, newData,token);
             if (res) {
                 toast.success("El aditivo se editó correctamente.");
                 setTimeout(() => {

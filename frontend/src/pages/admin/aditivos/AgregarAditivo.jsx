@@ -2,18 +2,19 @@ import { useForm } from "react-hook-form";
 import { Input } from "@nextui-org/react";
 import { Toaster, toast } from "sonner";
 import { createAditivo } from "../../../api/materiales";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import {useAuth} from "../../../context/auth-context"
 function AgregarAditivo() {
     const { register, formState: { errors }, handleSubmit, watch } = useForm();
     const navigate = useNavigate();
+    const {token} = useAuth();
     const onSubmit = handleSubmit(async (values) => {
         try {
-            console.log(values)
             const data = {
                 nombre: values.nombre.toUpperCase(),
                 cantidad: parseInt(values.cantidad)
             }
-            const res = await createAditivo(data);
+            const res = await createAditivo(data,token);
             if (res) {
                 toast.success("El aditivo se agrego.");
                 setTimeout(() => {
@@ -22,8 +23,6 @@ function AgregarAditivo() {
             }else{
                 toast.error("Error en el servidor.");
             }
-
-
         }
         catch (error) {
             toast.error(error.response.data.message);

@@ -8,6 +8,7 @@ import ModalDelete from "../../../components/ModalDelete";
 import { Toaster, toast } from 'sonner';
 import ModalAccept from "../../../components/ModalAccept";
 import { CircularProgress } from "@nextui-org/react";
+import { useAuth } from "../../../context/auth-context";
 
 const Requests = () => {
     const [data, setData] = React.useState([]);
@@ -15,7 +16,7 @@ const Requests = () => {
     const [filteredData, setFilteredData] = React.useState([]);
     const [page, setPage] = React.useState(1);
     const [filterValue, setFilterValue] = React.useState("");
-    const [errorMsg, setErrorMsg] = React.useState(true);
+    const {token} = useAuth();
     const rowsPerPage = 10;
     const pages = Math.ceil(filteredData.length / rowsPerPage);
     const items = React.useMemo(() => {
@@ -26,7 +27,7 @@ const Requests = () => {
 
     useEffect(() => {
         const getAllLoans = async () => {
-            const res = await getAllRequests();
+            const res = await getAllRequests(token);
             if (res) {
                 setLoaded(false);
                 setData(res.data);
@@ -63,16 +64,15 @@ const Requests = () => {
     }, []);
 
     const getKeyValue = (item, columnKey) => {
-        // Handle nested fields
         if (columnKey === 'alumno' && typeof item[columnKey] === 'object') {
-            return item[columnKey].nombre;
+            return item[columnKey]?.nombre;
         }
         return item[columnKey];
     };
 
     const handleRejectRequest = async (id) => {
         try {
-            const res = await requestsVal({ aceptado: false, id });
+            const res = await requestsVal({ aceptado: false, id },token);
             if (res) {
                 toast.success("Solicitud rechazada.");
                 setData(data.filter(item => item._id !== id));
@@ -83,7 +83,7 @@ const Requests = () => {
     };
     const handleAcceptRequest = async (id) => {
         try {
-            const res = await requestsVal({ aceptado: true, id });
+            const res = await requestsVal({ aceptado: true, id },token);
             if (res) {
                 toast.success('Solicitud aceptada.');
                 setData(data.filter(item => item._id !== id));

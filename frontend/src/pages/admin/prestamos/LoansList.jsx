@@ -18,7 +18,7 @@ import { useAuth } from "../../../context/auth-context";
 import ModalLoans from "../../../components/ModalLoans";
 import { BsCalendar2Date } from "react-icons/bs";
 const LoanList = () => {
-    const { user } = useAuth();
+    const { user,token } = useAuth();
     const [data, setData] = React.useState([]);
     const [loaded, setLoaded] = React.useState(true);
     const [filteredData, setFilteredData] = React.useState([]);
@@ -35,7 +35,7 @@ const LoanList = () => {
     }, [page, filteredData]);
     useEffect(() => {
         const getSolicitudes = async () => {
-            const res = await getAllLoansApi();
+            const res = await getAllLoansApi(token);
             if (res) {
                 setLoaded(false);
                 setData(res.data);

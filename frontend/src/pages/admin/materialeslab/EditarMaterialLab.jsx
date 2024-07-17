@@ -2,9 +2,10 @@ import { styles } from "../../../assets/styles/global-styles"
 import { Input } from "@nextui-org/react";
 import { Controller, useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
-import { createMaterialLab,getMaterialLabById,updateMaterialLab} from "../../../api/materiales";
+import { getMaterialLabById,updateMaterialLab} from "../../../api/materiales";
 import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react";
+import { useAuth } from "../../../context/auth-context";
 function EditarMaterialLab() {
     const params = useParams();
     const { control, formState: { errors }, handleSubmit, reset } = useForm({
@@ -15,17 +16,14 @@ function EditarMaterialLab() {
     });
     const navigate = useNavigate();
     const [data, setData]= useState([]);
+    const {token} = useAuth();
     const onSubmit = handleSubmit(async (values) => {
-        const {nombre, existencias}= values;
-        const newData={
-            nombre, existencias
-        }
         try {
             const newData = {
                 nombre: values.nombre.toUpperCase(),
                 existencias: parseInt(values.existencias)
             }
-            const res = await updateMaterialLab(params.id, newData);
+            const res = await updateMaterialLab(params.id, newData,token);
             if (res) {
                 toast.success("El material se editó correctamente.");
                 setTimeout(() => {
