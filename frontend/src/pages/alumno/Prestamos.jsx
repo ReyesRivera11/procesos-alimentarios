@@ -34,7 +34,7 @@ const Prestamos = () => {
     }, [page, filteredData]);
     useEffect(() => {
         const getSolicitudes = async () => {
-            const res = await getLoansByAlumno(user._id);
+            const res = await getLoansByAlumno(user._id,token);
             if (res) {
                 setLoaded(false);
                 setData(res.data);
