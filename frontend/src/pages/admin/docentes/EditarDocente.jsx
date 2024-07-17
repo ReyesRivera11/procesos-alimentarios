@@ -63,7 +63,7 @@ function EditarDocente() {
                 const newVal = materias.map(materia => materia._id);
                 setValues(newVal)
                 reset({
-                    nombre,
+                    nombre:nombre.toUpperCase(),
                     correo,
                     materias: materias.map(materia => materia._id), 
                 });
