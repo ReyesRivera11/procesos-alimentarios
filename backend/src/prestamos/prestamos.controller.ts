@@ -54,7 +54,6 @@ export class PracticasController {
   }
 
   @Get(':id')
-  @Auth(Role.ADMIN)
   async findOne(@Param('id') id: string) {
     const res = await this.prestamosServices.findOne(id);
     if(!res) throw new NotFoundException("El prestamo no se encuentra registrado o fue borrado.")
