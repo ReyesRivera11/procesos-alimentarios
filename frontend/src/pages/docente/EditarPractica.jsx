@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { styles } from '../../assets/styles/global-styles';
 import { Input } from "@nextui-org/input";
+import { Button } from '@nextui-org/react';
 import { Select, SelectSection, SelectItem } from "@nextui-org/select";
 import { DatePicker } from "@nextui-org/date-picker";
 import { getLocalTimeZone, today, Time } from "@internationalized/date";
@@ -15,7 +16,7 @@ import { toast, Toaster } from 'sonner';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const EditarPractica = () => {
-    const { register, formState: { errors }, handleSubmit, control } = useForm();
+    const { register, formState: { errors }, handleSubmit, control, reset } = useForm();
     const { user } = useAuth();
     const [practica, setPractica] = useState([]);
     const [date, setDate] = useState(today(getLocalTimeZone()));
@@ -159,7 +160,17 @@ const EditarPractica = () => {
             const equipoLab = await getAllLaboratorio();
             const equipoTaller = await getAllEquipoTaller();
             const getPractica = await getPracticasById(params.id);
-            setPractica(getPractica.data);
+            setCuatri(getPractica.data[0].cuatrimestre);
+            const parseDate = (dateString) => {
+                const [day, month, year] = dateString.split('/');
+                return new Date(year, month - 1, day);
+            };
+
+            console.log()
+            reset({
+                ...getPractica.data[0],
+                asignatura: getPractica.data[0].asignatura._id,
+            });
             setTallerEquipo(equipoTaller.data)
             setMaterias(materias.data);
             setAditivos(aditivos.data);
@@ -184,85 +195,135 @@ const EditarPractica = () => {
                         />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                             <Controller
-                                name='cuatrimestre'
+                                name="cuatrimestre"
                                 control={control}
-                                rules={{ required: "El cuatrimestre es requerido" }}
-                                render={({ field }) =>
+                                render={({ field }) => (
                                     <Select
-                                        label="Cuatrimestre"
-                                        variant='bordered'
-                                        isInvalid={Boolean(errors?.grupo)}
-                                        errorMessage={errors?.cuatrimestre?.message}
                                         {...field}
+                                        label="Cuatrimestre"
+                                        placeholder="Selecciona un cuatrimestre"
+                                        variant="bordered"
+                                        selectedKeys={new Set([field.value])}
+                                        isInvalid={Boolean(errors?.cuatrimestre)}
+                                        errorMessage={errors?.cuatrimestre?.message}
+                                    >
+                                        {cuatrimestre.map((item) => (
+                                            <SelectItem key={item} value={item}>
+                                                {item}
+                                            </SelectItem>
+                                        ))}
+                                    </Select>
+                                )}
+                            />
+                            <Controller
+                                name="grupo"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select
+                                        {...field}
+                                        label="Grupo"
+                                        placeholder="Selecciona un grupo"
+                                        variant="bordered"
+                                        isInvalid={Boolean(errors?.grupo)}
+                                        errorMessage={errors?.grupo?.message}
                                         selectedKeys={new Set([field.value])}
                                         onChange={field.onChange}
+
                                     >
-                                        {
-                                            cuatrimestre.map(mat => (
-                                                <SelectItem value={mat} onClick={() => setCuatri(mat)} key={mat}>
-                                                    {mat}
-                                                </SelectItem>
-                                            ))
-                                        }
+                                        {allGrupos.map((item) => (
+                                            <SelectItem key={item} value={item}>
+                                                {item}
+                                            </SelectItem>
+                                        ))}
                                     </Select>
-                                }
-
+                                )}
                             />
-                            <Select
-                                label="Grupo"
-                                variant='bordered'
-                                isInvalid={Boolean(errors?.grupo)}
-                                errorMessage={errors?.grupo?.message}
-                                {...register("grupo", { required: "El grupo es requerido" })}
-                            >
-                                {
-                                    allGrupos.map(mat => (
-                                        <SelectItem key={mat}>{mat}</SelectItem>
-                                    ))
-                                }
-                            </Select>
                         </div>
-                        <Select
-                            label="Materia"
-                            variant='bordered'
-                            isInvalid={errors?.asignatura ? true : false}
-                            errorMessage={errors?.asignatura?.message}
-                            {...register("asignatura", { required: "La materia es requerida" })}
-                        >
-                            {materiaSelected.length === 0 ? (
-                                <SelectItem key="empty" disabled>
-                                    No hay materias disponibles para el cuatrimestre seleccionado
-                                </SelectItem>
-                            ) : (
-                                materiaSelected.map(mat => (
-                                    <SelectItem key={mat._id} value={mat.nombre}>
-                                        {mat.nombre}
+                        <Controller
+                            name='asignatura'
+                            rules={{ required: "La materia es requerida" }}
+                            control={control}
+                            render={({ field }) => <Select
+                                label="Materia"
+                                variant='bordered'
+                                isInvalid={errors?.asignatura ? true : false}
+                                errorMessage={errors?.asignatura?.message}
+                                selectedKeys={new Set([field.value])}
+                                onChange={field.onChange}
+                            >
+                                {materiaSelected.length === 0 ? (
+                                    <SelectItem key="empty" disabled>
+                                        No hay materias disponibles para el cuatrimestre seleccionado
                                     </SelectItem>
-                                ))
-                            )}
-                        </Select>
+                                ) : (
+                                    materiaSelected.map(mat => (
+                                        <SelectItem key={mat._id} value={mat.nombre}>
+                                            {mat.nombre}
+                                        </SelectItem>
+                                    ))
+                                )}
+                            </Select>}
+                        />
 
-                        <Input
-                            type="text"
-                            label="Practica"
-                            variant='bordered'
-                            isInvalid={Boolean(errors?.practica)}
-                            errorMessage={errors?.practica?.message}
-                            {...register("practica", {
+                        <Controller
+                            name='practica'
+                            control={control}
+                            rules={{
                                 required: "El nombre de la practica es requerido.",
                                 minLength: { value: 6, message: "Debe contener al menos 6 caracteres." },
                                 pattern: { value: /^[a-zA-Z0-9 ]*$/, message: "Solo debe contener letras y numeros." }
-                            })}
+                            }}
+                            render={({ field }) => <Input
+                                {...field}
+                                type="text"
+                                label="Practica"
+                                variant='bordered'
+                                isInvalid={Boolean(errors?.practica)}
+                                errorMessage={errors?.practica?.message}
+
+                            />}
                         />
-                        <DatePicker
-                            label="Fecha requerida"
-                            variant='bordered'
-                            minValue={today(getLocalTimeZone())}
-                            defaultValue={today(getLocalTimeZone())}
-                            maxValue={today(getLocalTimeZone()).add({ weeks: 2 })}
-                            value={date}
-                            onChange={handleChangeDate}
+
+                        <Controller
+                            name='fecha'
+                            control={control}
+                            rules={{
+                                required: "El nombre de la practica es requerido.",
+                                minLength: { value: 6, message: "Debe contener al menos 6 caracteres." },
+                                pattern: { value: /^[a-zA-Z0-9 ]*$/, message: "Solo debe contener letras y numeros." }
+                            }}
+                            render={({ field }) => <Input
+                                {...field}
+                                type="text"
+                                label="Fecha actual"
+                                variant='bordered'
+                                disabled
+                            />}
                         />
+                        <div className='w-full flex items-end justify-end'>
+                            <Button>Editar fecha</Button>
+                        </div>
+                        {/* <Controller
+                            name='fecha'
+                            control={control}
+                            rules={{
+                                required: "La fecha es requerida."
+                            }}
+                            render={({ field }) => (
+                                <DatePicker
+                                    {...field}
+                                    label="Fecha requerida"
+                                    variant='bordered'
+                                    minValue={today(getLocalTimeZone())}
+                                    // defaultValue={new Date(practica.fecha)}
+                                    maxValue={today(getLocalTimeZone()).add({ weeks: 2 })}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    isInvalid={Boolean(errors?.fecha)}
+                                    errorMessage={errors?.fecha?.message}
+                                />
+                            )}
+                        /> */}
 
                     </div>
                     <div className="flex flex-col gap-4">
