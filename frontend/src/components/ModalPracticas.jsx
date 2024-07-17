@@ -100,7 +100,7 @@ const ModalPracticas = ({ id }) => {
                                     <TableHeader>
                                         <TableColumn className='text-center text-sm font-bold' key={"nombre"}>Material</TableColumn>
                                         <TableColumn className='w-28 text-center text-sm font-bold' key={"cantidad"}>Cantidad solicitada</TableColumn>
-                                        <TableColumn className='w-28 text-center text-sm font-bold' key={"cantidad"}>Disponibles</TableColumn>
+                                        <TableColumn className='w-28 text-center text-sm font-bold' key={"disponible"}>Disponibles</TableColumn>
                                     </TableHeader>
                                     <TableBody items={data[0]?.materiales}>
                                         {(item) => (

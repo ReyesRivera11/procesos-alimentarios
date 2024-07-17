@@ -5,18 +5,19 @@ import { Select, SelectSection, SelectItem } from "@nextui-org/select";
 import { DatePicker } from "@nextui-org/date-picker";
 import { getLocalTimeZone, today, Time } from "@internationalized/date";
 import { TimeInput } from "@nextui-org/date-input";
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { getAditivos, getAllDocentes, getAllLaboratorio, getAllMaterias, getMatAlmacen, getMatLaboratorio } from '../../api/data-form';
 import { useAuth } from '../../context/auth-context';
 import { getAllEquipoTaller } from '../../api/materiales';
 import { allGrupos, cuatrimestre } from '../../data/cuatrimestre-grupo';
-import { crearPractica } from '../../api/practicas';
+import { crearPractica, getPracticasById } from '../../api/practicas';
 import { toast, Toaster } from 'sonner';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const CrearPractica = () => {
-    const { register, formState: { errors }, handleSubmit } = useForm();
+const EditarPractica = () => {
+    const { register, formState: { errors }, handleSubmit, control } = useForm();
     const { user } = useAuth();
+    const [practica, setPractica] = useState([]);
     const [date, setDate] = useState(today(getLocalTimeZone()));
     const [aditivos, setAditivos] = useState([]);
     const [laboratorio, setLaboratorio] = useState([]);
@@ -39,7 +40,6 @@ const CrearPractica = () => {
         setSelectedKeys(newKeys);
         updateQuantities(newKeys, matLaboratorio, matAlmacen, equipoLab, equipoTaller);
     };
-    console.log(materiaSelected)
     useEffect(() => {
         if (cuatri) {
             const filteredMaterias = materias.filter(mat => mat.cuatrimestre === cuatri);
@@ -149,6 +149,7 @@ const CrearPractica = () => {
             }
         }
     });
+    const params = useParams();
     useEffect(() => {
         const getAllMaterials = async () => {
             const aditivos = await getAditivos();
@@ -157,7 +158,8 @@ const CrearPractica = () => {
             const materias = await getAllMaterias();
             const equipoLab = await getAllLaboratorio();
             const equipoTaller = await getAllEquipoTaller();
-
+            const getPractica = await getPracticasById(params.id);
+            setPractica(getPractica.data);
             setTallerEquipo(equipoTaller.data)
             setMaterias(materias.data);
             setAditivos(aditivos.data);
@@ -181,21 +183,31 @@ const CrearPractica = () => {
                             value={user?.nombre}
                         />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                            <Select
-                                label="Cuatrimestre"
-                                variant='bordered'
-                                isInvalid={Boolean(errors?.grupo)}
-                                errorMessage={errors?.cuatrimestre?.message}
-                                {...register("cuatrimestre", { required: "El cuatrimestre es requerido" })}
-                            >
-                                {
-                                    cuatrimestre.map(mat => (
-                                        <SelectItem onClick={() => setCuatri(mat)} key={mat}>
-                                            {mat}
-                                        </SelectItem>
-                                    ))
+                            <Controller
+                                name='cuatrimestre'
+                                control={control}
+                                rules={{ required: "El cuatrimestre es requerido" }}
+                                render={({ field }) =>
+                                    <Select
+                                        label="Cuatrimestre"
+                                        variant='bordered'
+                                        isInvalid={Boolean(errors?.grupo)}
+                                        errorMessage={errors?.cuatrimestre?.message}
+                                        {...field}
+                                        selectedKeys={new Set([field.value])}
+                                        onChange={field.onChange}
+                                    >
+                                        {
+                                            cuatrimestre.map(mat => (
+                                                <SelectItem value={mat} onClick={() => setCuatri(mat)} key={mat}>
+                                                    {mat}
+                                                </SelectItem>
+                                            ))
+                                        }
+                                    </Select>
                                 }
-                            </Select>
+
+                            />
                             <Select
                                 label="Grupo"
                                 variant='bordered'
@@ -403,4 +415,4 @@ const CrearPractica = () => {
     );
 };
 
-export default CrearPractica;
+export default EditarPractica;

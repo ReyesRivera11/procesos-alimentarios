@@ -22,7 +22,6 @@ export class AsignaturasController {
   }
 
   @Get()
-  @Auth(Role.ADMIN)
   findAll() {
     return this.asignaturasService.findAll();
   }

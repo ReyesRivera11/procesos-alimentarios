@@ -6,11 +6,7 @@ export const createAsignatura = (data,token) => axios.post("/asignaturas", data,
     }
 });
 
-export const getAllAsignaturas = (token) => axios.get("/asignaturas", {
-    headers: {
-        "Authorization": `Bearer ${token}`,
-    }
-});
+export const getAllAsignaturas = (token) => axios.get("/asignaturas");
 
 export const getAsignaturaById = (id, token) => axios.get(`/asignaturas/${id}`, {
     headers: {

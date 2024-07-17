@@ -1,6 +1,6 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, Button, Tooltip, Input, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import React, { useEffect } from "react";
-import { CiSearch, CiUnlock } from "react-icons/ci";
+import { CiEdit, CiSearch, CiUnlock } from "react-icons/ci";
 import { Toaster, toast } from 'sonner';
 import { CircularProgress } from "@nextui-org/react";
 import { CiLock } from "react-icons/ci";
@@ -45,6 +45,7 @@ const Practicas = () => {
         }
         setLoaded(false);
     };
+    const navigate =  useNavigate();
     useEffect(() => {
         getSolicitudes();
     }, []);
@@ -71,7 +72,7 @@ const Practicas = () => {
 
         setFilteredData(filteredAndSortedData);
         setPage(1);
-    }, [filterValue, data, sortOrder, sortOrderDate,groupFilter,semesterFilter]);
+    }, [filterValue, data, sortOrder, sortOrderDate, groupFilter, semesterFilter]);
     const onSearchChange = React.useCallback((e) => {
         const { value } = e.target;
         setFilterValue(value);
@@ -386,7 +387,19 @@ const Practicas = () => {
                                                             </Tooltip>
                                                         </Button>)
                                                     }
-
+                                                    <Button
+                                                        className="text-xl"
+                                                        isIconOnly
+                                                        color="primary"
+                                                        variant="flat"
+                                                        onClick={() => navigate(`/editar-practica/${item._id}`)}
+                                                    >
+                                                        <Tooltip className="bg-blue-500 text-white" content="Editar">
+                                                            <span>
+                                                                <CiEdit />
+                                                            </span>
+                                                        </Tooltip>
+                                                    </Button>
                                                     <Button isIconOnly variant="flat">
                                                         {
                                                             <ModalPracticas id={item._id} />
