@@ -18,7 +18,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 const EditarPractica = () => {
     const { register, formState: { errors }, handleSubmit, control, reset } = useForm();
-    const { user,token } = useAuth();
+    const { user, token } = useAuth();
     const [date, setDate] = useState(today(getLocalTimeZone()));
     const [aditivos, setAditivos] = useState([]);
     const [laboratorio, setLaboratorio] = useState([]);
@@ -81,7 +81,7 @@ const EditarPractica = () => {
                 if (existing) {
                     updatedQuantities.push(existing);
                 } else {
-                    updatedQuantities.push({ _id: key, cantidad: 1});
+                    updatedQuantities.push({ _id: key, cantidad: 1 });
                 }
             });
         };
@@ -107,7 +107,7 @@ const EditarPractica = () => {
         }
 
         setQuantityErrors(newErrors);
-        setQuantities((prevQuantities) => prevQuantities.map(item => item._id === key ? { ...item, cantidad: newValue} : item));
+        setQuantities((prevQuantities) => prevQuantities.map(item => item._id === key ? { ...item, cantidad: newValue } : item));
     };
 
 
@@ -139,7 +139,7 @@ const EditarPractica = () => {
                 newData.fecha = formatDate(date)
             }
             try {
-                const res = await updatePractica(params.id,newData,token);
+                const res = await updatePractica(params.id, newData, token);
                 if (res) {
                     toast.success("Practica editada correctamente.");
                     setTimeout(() => {
@@ -162,14 +162,18 @@ const EditarPractica = () => {
             const equipoTaller = await getAllEquipoTaller();
             const getPractica = await getPracticasById(params.id);
 
-            // Carga de datos
-            setCuatri(getPractica.data[0].cuatrimestre);
-            setTallerEquipo(equipoTaller.data);
-            setMaterias(materiasApi.data);
-            setAditivos(aditivos.data);
-            setAlmacen(almacen.data);
-            setLaboratorio(laboratorio.data);
-            setLaboratorioEquipo(equipoLab.data);
+            const filtroAditivos = aditivos.data.filter(item => item.cantidad > 0);
+            const filtroTallerEquipo = equipoTaller.data.filter(item => item.enUso === false && item.estado === "ACTIVO");
+            const filtroAlmacen = almacen.data.filter(item => item.existencias > 0);
+            const filtroLab = laboratorio.data.filter(item => item.existencias > 0);
+            const filtroLabEquipo = equipoLab.data.filter(item => item.cantidad > 0);
+
+            setTallerEquipo(filtroTallerEquipo);
+            setMaterias(materias.data);
+            setAditivos(filtroAditivos);
+            setAlmacen(filtroAlmacen);
+            setLaboratorio(filtroLab);
+            setLaboratorioEquipo(filtroLabEquipo)
 
             reset({
                 ...getPractica.data[0],
