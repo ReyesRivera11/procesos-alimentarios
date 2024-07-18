@@ -157,12 +157,19 @@ const CrearPractica = () => {
             const equipoLab = await getAllLaboratorio();
             const equipoTaller = await getAllEquipoTaller();
 
-            setTallerEquipo(equipoTaller.data)
+            const filtroAditivos = aditivos.data.filter(item => item.cantidad >0);
+            const filtroTallerEquipo = equipoTaller.data.filter(item=> item.enUso === false && item.estado === "ACTIVO");
+            const filtroAlmacen = almacen.data.filter(item => item.existencias >0);
+            const filtroLab = laboratorio.data.filter(item => item.existencias >0);
+            const filtroLabEquipo = equipoLab.data.filter(item => item.cantidad >0);
+
+
+            setTallerEquipo(filtroTallerEquipo);
             setMaterias(materias.data);
-            setAditivos(aditivos.data);
-            setAlmacen(almacen.data);
-            setLaboratorio(laboratorio.data);
-            setLaboratorioEquipo(equipoLab.data)
+            setAditivos(filtroAditivos);
+            setAlmacen(filtroAlmacen);
+            setLaboratorio(filtroLab);
+            setLaboratorioEquipo(filtroLabEquipo)
         };
         getAllMaterials();
     }, []);
