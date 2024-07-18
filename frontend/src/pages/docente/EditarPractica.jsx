@@ -162,14 +162,20 @@ const EditarPractica = () => {
             const equipoTaller = await getAllEquipoTaller();
             const getPractica = await getPracticasById(params.id);
 
+            const filtroAditivos = aditivos.data.filter(item => item.cantidad >0);
+            const filtroTallerEquipo = equipoTaller.data.filter(item=> item.enUso === false && item.estado === "ACTIVO");
+            const filtroAlmacen = almacen.data.filter(item => item.existencias >0);
+            const filtroLab = laboratorio.data.filter(item => item.existencias >0);
+            const filtroLabEquipo = equipoLab.data.filter(item => item.cantidad >0);
+
             // Carga de datos
             setCuatri(getPractica.data[0].cuatrimestre);
-            setTallerEquipo(equipoTaller.data);
             setMaterias(materiasApi.data);
-            setAditivos(aditivos.data);
-            setAlmacen(almacen.data);
-            setLaboratorio(laboratorio.data);
-            setLaboratorioEquipo(equipoLab.data);
+            setTallerEquipo(filtroTallerEquipo);
+            setAditivos(filtroAditivos);
+            setAlmacen(filtroAlmacen);
+            setLaboratorio(filtroLab);
+            setLaboratorioEquipo(filtroLabEquipo);
             reset({
                 ...getPractica.data[0],
                 asignatura: getPractica.data[0].asignatura._id,
