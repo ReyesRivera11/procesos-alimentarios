@@ -134,7 +134,6 @@ export class PracticasService {
         const equipoTaller = equiposTaller.find(mat => mat._id.toString() === material._id.toString());
         const newMaterial = {
           nombre: materialAlmacen?.nombre || materialLab?.nombre || aditivo?.nombre || equipoLab?.nombre || equipoTaller?.nombre,
-          disponible:material.disponible,
           cantidad:material.cantidad,
           _id:material._id
         }
@@ -173,7 +172,6 @@ export class PracticasService {
         const equipoTaller = equiposTaller.find(mat => mat._id.toString() === material._id.toString());
         const newMaterial = {
           nombre: materialAlmacen?.nombre || materialLab?.nombre || aditivo?.nombre || equipoLab?.nombre || equipoTaller?.nombre,
-          disponible:material.disponible,
           cantidad:material.cantidad,
           _id:material._id
         }
@@ -213,7 +211,6 @@ export class PracticasService {
 
         const newMaterial = {
           nombre: materialAlmacen?.nombre || materialLab?.nombre || aditivo?.nombre || equipoLab?.nombre || equipoTaller?.nombre,
-          disponible:material.disponible,
           cantidad:material.cantidad,
           _id:material._id
         }
@@ -254,7 +251,7 @@ export class PracticasService {
 
         const newMaterial = {
           nombre: materialAlmacen?.nombre || materialLab?.nombre || aditivo?.nombre || equipoLab?.nombre || equipoTaller?.nombre,
-          disponible:material.disponible,
+          cantidad:material.cantidad,
           _id:material._id
         }
         

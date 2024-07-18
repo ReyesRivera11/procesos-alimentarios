@@ -6,6 +6,7 @@ import UthhLogo from "../assets/images/uthh-logo.png";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
 
 import { getPracticasById } from '../api/practicas';
+import { useAuth } from '../context/auth-context';
 
 const ModalPracticas = ({ id }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -100,14 +101,14 @@ const ModalPracticas = ({ id }) => {
                                     <TableHeader>
                                         <TableColumn className='text-center text-sm font-bold' key={"nombre"}>Material</TableColumn>
                                         <TableColumn className='w-28 text-center text-sm font-bold' key={"cantidad"}>Cantidad solicitada</TableColumn>
-                                        <TableColumn className='w-28 text-center text-sm font-bold' key={"disponible"}>Disponibles</TableColumn>
+                                        
                                     </TableHeader>
                                     <TableBody items={data[0]?.materiales}>
                                         {(item) => (
                                             <TableRow key={item?.nombre}>
                                                 <TableCell className=" uppercase">{item?.nombre}</TableCell>
                                                 <TableCell className="text-center">{item?.cantidad}</TableCell>
-                                                <TableCell className="text-center">{item?.disponible}</TableCell>
+                                            
                                             </TableRow>
                                         )}
                                     </TableBody>

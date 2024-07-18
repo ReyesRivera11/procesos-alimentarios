@@ -36,6 +36,7 @@ export class PracticasController {
   }
 
   @Patch(':id')
+  @Auth(Role.DOCENTE)
   async update(@Param('id') id: string, @Body() updatePracticaDto: UpdatePracticaDto) {
     const res = await this.practicasService.update(id, updatePracticaDto);
     if(!res) throw new NotFoundException("La practica no existe.")

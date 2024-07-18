@@ -6,7 +6,6 @@ import { Profesores } from "src/profesores/schemas/profesores-schema";
 export interface MaterialPracticas {
     _id:string;
     cantidad:number;
-    disponible:number;
 }
 
 @Schema({

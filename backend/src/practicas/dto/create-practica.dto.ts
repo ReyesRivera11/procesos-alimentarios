@@ -10,12 +10,6 @@ class MaterialDto {
     @Min(1)
     @Max(100)
     cantidad:number;
-
-    @IsNotEmpty()
-    @IsNumber()
-    @Min(1)
-    @Max(100)
-    disponible:number;
 }
 export class CreatePracticaDto {
     @IsString()

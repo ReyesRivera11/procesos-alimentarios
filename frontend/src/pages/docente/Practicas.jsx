@@ -19,7 +19,7 @@ import { BsAlphabetUppercase, BsCalendar2Date } from "react-icons/bs";
 import { deletePractica, getPracticasDocente, updateEstado } from "../../api/practicas";
 import ModalPracticas from "../../components/ModalPracticas";
 const Practicas = () => {
-    const { user } = useAuth();
+    const { user,token } = useAuth();
     const [semesterFilter, setSemesterFilter] = React.useState("all");
     const [groupFilter, setGroupFilter] = React.useState("all");
     const [data, setData] = React.useState([]);
@@ -119,7 +119,7 @@ const Practicas = () => {
 
     const handleDesactivar = async (id) => {
         try {
-            const res = await updateEstado(id, { estado: "INACTIVO" });
+            const res = await updateEstado(id, { estado: "INACTIVO" },token);
             if (res) {
                 toast.success("Practica deshabilita correctamente.");
                 getSolicitudes();
@@ -131,7 +131,7 @@ const Practicas = () => {
 
     const handleActivar = async (id) => {
         try {
-            const res = await updateEstado(id, { estado: "ACTIVO" });
+            const res = await updateEstado(id, { estado: "ACTIVO" },token);
             if (res) {
                 toast.success("Practica habilitada correctamente.");
                 getSolicitudes();

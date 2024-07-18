@@ -39,7 +39,6 @@ const CrearPractica = () => {
         setSelectedKeys(newKeys);
         updateQuantities(newKeys, matLaboratorio, matAlmacen, equipoLab, equipoTaller);
     };
-    console.log(materiaSelected)
     useEffect(() => {
         if (cuatri) {
             const filteredMaterias = materias.filter(mat => mat.cuatrimestre === cuatri);
@@ -80,7 +79,7 @@ const CrearPractica = () => {
                 if (existing) {
                     updatedQuantities.push(existing);
                 } else {
-                    updatedQuantities.push({ _id: key, cantidad: 1, disponible: 1 });
+                    updatedQuantities.push({ _id: key, cantidad: 1});
                 }
             });
         };
@@ -106,7 +105,7 @@ const CrearPractica = () => {
         }
 
         setQuantityErrors(newErrors);
-        setQuantities((prevQuantities) => prevQuantities.map(item => item._id === key ? { ...item, cantidad: newValue, disponible: newValue } : item));
+        setQuantities((prevQuantities) => prevQuantities.map(item => item._id === key ? { ...item, cantidad: newValue } : item));
     };
 
 

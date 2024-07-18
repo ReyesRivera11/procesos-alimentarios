@@ -5,7 +5,7 @@ import { Select, SelectItem } from "@nextui-org/select";
 import { getLocalTimeZone, today, Time } from "@internationalized/date";
 import { TimeInput } from "@nextui-org/date-input";
 import { useForm } from 'react-hook-form';
-import {Toaster,toast} from "sonner"
+import { Toaster, toast } from "sonner"
 import { useAuth } from '../../context/auth-context';
 import { practicasDisponibles } from '../../api/practicas';
 import { CircularProgress } from '@nextui-org/react';
@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 const RequestMaterials = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
     const [practica, setPractica] = useState({});
-    const { user,token } = useAuth();
+    const { user, token } = useAuth();
     const [practicas, setPracticas] = useState([]);
     const [hora, setHora] = useState(new Time(7, 0));
     const [errorText, setErrorText] = useState("");
@@ -24,6 +24,7 @@ const RequestMaterials = () => {
     const [quantityErrors, setQuantityErrors] = useState({});
     const [matErrors, setMatErros] = useState("");
     const [load, setLoad] = useState(true);
+    const [materiales, setMateriales] = useState([]);
     const handleLabEquipChange = (keys) => {
         const newKeys = new Set(keys);
         setEquipoLab(newKeys);
@@ -75,7 +76,7 @@ const RequestMaterials = () => {
             throw new Error("Horario no permitido.");
         }
         const ampm = hour >= 12 ? 'PM' : 'AM';
-        hour = hour % 12 <20 ? "0" + hour : hour || 12;
+        hour = hour % 12 < 20 ? "0" + hour : hour || 12;
         minute = minute < 10 ? '0' + minute : minute;
         return `${hour}:${minute} ${ampm}`;
     };
@@ -83,9 +84,9 @@ const RequestMaterials = () => {
     const formatDate = () => {
         const now = new Date();
         const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0'); 
+        const month = String(now.getMonth() + 1).padStart(2, '0');
         const day = String(now.getDate()).padStart(2, '0');
-        
+
         return `${day}/${month}/${year}`;
     };
 
@@ -93,15 +94,10 @@ const RequestMaterials = () => {
         const now = new Date();
         let hour = now.getHours();
         let minute = now.getMinutes();
-        if (hour > 20 || hour <= 6) {
-            setErrorText("Horario no permitido.");
-            setTimeout(() => setErrorText(""), 2000);
-            throw new Error("Horario no permitido.");
-        }
         const ampm = hour >= 12 ? 'PM' : 'AM';
         hour = hour % 12;
-        hour = hour ? hour : 12; 
-        hour = hour < 10 ? "0" + hour : hour;   
+        hour = hour ? hour : 12;
+        hour = hour < 10 ? "0" + hour : hour;
         minute = minute < 10 ? '0' + minute : minute;
         return `${hour}:${minute} ${ampm}`;
     };
@@ -114,18 +110,18 @@ const RequestMaterials = () => {
                 ...values,
                 alumno: user._id,
                 horaEntregaSolicitud: getCurrentTime(),
-                profesor:practica.profesor._id,
+                profesor: practica.profesor._id,
                 materiales: quantities,
-                nombrePractica:practica.practica,
-                fechaMaterialRequerido:practica.fecha,
-                fecha:formatDate(),
-                id_Practica:practica._id,
-                horaMaterialRequerido:formatTime(hora),
-                asignatura:practica?.asignatura?._id
+                nombrePractica: practica.practica,
+                fechaMaterialRequerido: practica.fecha,
+                fecha: formatDate(),
+                id_Practica: practica._id,
+                horaMaterialRequerido: formatTime(hora),
+                asignatura: practica?.asignatura?._id
             };
             try {
-                const res = await createLoans(newData,token);
-                if(res){
+                const res = await createLoans(newData, token);
+                if (res) {
                     toast.success("La solicitud ha sido enviada.");
                     setTimeout(() => {
                         navigate("/solicitudes-alumno");
@@ -137,17 +133,22 @@ const RequestMaterials = () => {
         }
     });
     useEffect(() => {
+        setEquipoLab(new Set());
+        const filter = practica?.materiales?.filter(item => item.cantidad > 0);
+        setMateriales(filter);
+    }, [practica])
+    useEffect(() => {
         const getAllMaterials = async () => {
-            const practicasApi = await practicasDisponibles({ cuatrimestre: user.cuatrimestre, grupo: user.grupo },token);
+            const practicasApi = await practicasDisponibles({ cuatrimestre: user.cuatrimestre, grupo: user.grupo }, token);
             setPracticas(practicasApi.data);
-             setLoad(false);
+            setLoad(false);
         };
         getAllMaterials();
-       
+
     }, []);
     return (
         <div className='w-full sm:p-10 sm:px-20 p-5'>
-            <Toaster richColors/>
+            <Toaster richColors />
             {
                 load == true ? (
                     <div className="w-full h-52 flex justify-center items-center">
@@ -210,6 +211,11 @@ const RequestMaterials = () => {
                                         onChange={handleChangeHora}
                                         errorMessage={errorText}
                                     />
+                                    {
+                                        errorText&&(
+                                            <p>Error</p>
+                                        )
+                                    }
                                 </div>
                                 <div className="flex flex-col gap-4">
 
@@ -221,9 +227,11 @@ const RequestMaterials = () => {
                                             variant='bordered'
                                             onSelectionChange={handleLabEquipChange}
                                         >
-                                            {practica?.materiales?.map(item => (
+                                            {materiales?.map(item =>
+
                                                 <SelectItem key={item._id} value={item._id}>{item.nombre}</SelectItem>
-                                            ))}
+
+                                            )}
                                         </Select>
                                         {equipoLab.size > 0 && Array.from(equipoLab).map(key => (
                                             <div key={key}>
@@ -233,7 +241,7 @@ const RequestMaterials = () => {
                                                     variant='bordered'
                                                     min={1}
                                                     value={quantities.find(item => item._id === key)?.cantidad || getEquipoLabById(key).nombre}
-                                                    onChange={(e) => handleQuantityChange(key, e.target.value, getEquipoLabById(key).disponible)}
+                                                    onChange={(e) => handleQuantityChange(key, e.target.value, getEquipoLabById(key).cantidad)}
                                                     errorMessage={quantityErrors[key] || ''}
                                                     isInvalid={!!quantityErrors[key]}
                                                 />
