@@ -132,7 +132,7 @@ const EditarPractica = () => {
                 asignatura,
                 cuatrimestre,
                 grupo,
-                practica,
+                practica:practica.toUpperCase(),
                 materiales: quantities,
             }
             if (fecha) {
@@ -505,7 +505,7 @@ const EditarPractica = () => {
                             {
                                 quantities.length === 0 && <p className='text-red-500 text-sm text-center '>{matErrors}</p>
                             }
-                            <button onClick={() => onSubmit} className={"text-white p-2 "} style={{ backgroundColor: styles.btnBackground }} type="submit">Solicitar</button>
+                            <button onClick={() => onSubmit} className={"text-white p-2 "} style={{ backgroundColor: styles.btnBackground }} type="submit">Editar</button>
 
                         </div>
                     </form>) : <div className="w-full h-52 flex justify-center items-center">

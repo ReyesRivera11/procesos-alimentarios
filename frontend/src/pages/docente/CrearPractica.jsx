@@ -133,7 +133,8 @@ const CrearPractica = () => {
                 profesor: user._id,
                 fecha: formatDate(date),
                 materiales: quantities,
-                estado: "ACTIVO"
+                estado: "ACTIVO",
+                practica:values.practica.toUpperCase()
             }
             try {
                 const res = await crearPractica(newData);
