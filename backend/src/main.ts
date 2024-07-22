@@ -6,7 +6,7 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'https://bejewelled-flan-378a6d.netlify.app', 
+    origin: ['http://localhost:5173',"https://procesos-alimentarios.developers506.com"], 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, 
   });

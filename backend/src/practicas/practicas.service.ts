@@ -268,6 +268,7 @@ export class PracticasService {
   }
 
 
+
   async update(id: string, updatePracticaDto: UpdatePracticaDto) {
     const { materiales } = updatePracticaDto;
     const materialesAlmacen = await this.materialesAlmacenModel.find();
@@ -364,6 +365,10 @@ export class PracticasService {
       }
       throw new HttpException('Error interno del servidor', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  updateEstado(id: string,updatePracticaDto:UpdatePracticaDto) {
+    return this.practicasModel.findByIdAndUpdate(id,updatePracticaDto);
   }
 
   remove(id: string) {

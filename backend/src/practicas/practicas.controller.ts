@@ -43,6 +43,14 @@ export class PracticasController {
     return res;
   }
 
+  @Patch('update-estado/:id')
+  @Auth(Role.DOCENTE)
+  async updateEstado(@Param('id') id: string, @Body() updatePracticaDto: UpdatePracticaDto) {
+    const res = await this.practicasService.updateEstado(id, updatePracticaDto);
+    if(!res) throw new NotFoundException("La practica no existe.")
+    return res;
+  }
+
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const res = await this.practicasService.remove(id);

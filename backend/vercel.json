@@ -18,7 +18,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://bejewelled-flan-378a6d.netlify.app"
+          "value": "https://procesos-alimentarios.developers506.com"
         },
         {
           "key": "Access-Control-Allow-Methods",
