@@ -138,6 +138,7 @@ const EditarPractica = () => {
             if (fecha) {
                 newData.fecha = formatDate(date)
             }
+            console.log(newData); 
             try {
                 const res = await updatePractica(params.id,newData,token);
                 if (res) {
@@ -193,7 +194,6 @@ const EditarPractica = () => {
             setEquipoLab(new Set(selectedEquipoLab));
             setEquipoTaller(new Set(selectedEquipoTaller));
 
-            // Actualizar cantidades
             const quantities = getPractica.data[0].materiales.map(mat => ({
                 _id: mat._id,
                 cantidad: mat.cantidad,
@@ -385,8 +385,7 @@ const EditarPractica = () => {
                                             label={`Cantidad para ${getAditivoById(key).nombre}`}
                                             type="number"
                                             variant='bordered'
-                                            min={1}
-                                            value={quantities.find(item => item._id === key)?.cantidad || '1'}
+                                            value={quantities.find(item => item._id === key)?.cantidad }
                                             onChange={(e) => handleQuantityChange(key, e.target.value, getAditivoById(key).cantidad)}
                                             errorMessage={quantityErrors[key] || ''}
                                             isInvalid={!!quantityErrors[key]}
@@ -412,8 +411,7 @@ const EditarPractica = () => {
                                             label={`Cantidad para ${getLaboratorioById(key).nombre}`}
                                             type="number"
                                             variant='bordered'
-                                            min={1}
-                                            value={quantities.find(item => item._id === key)?.cantidad || '1'}
+                                            value={quantities.find(item => item._id === key)?.cantidad}
                                             onChange={(e) => handleQuantityChange(key, e.target.value, getLaboratorioById(key).existencias)}
                                             errorMessage={quantityErrors[key] || ''}
                                             isInvalid={!!quantityErrors[key]}
@@ -439,8 +437,7 @@ const EditarPractica = () => {
                                             label={`Cantidad para ${getAlmacenById(key).nombre}`}
                                             type="number"
                                             variant='bordered'
-                                            min={1}
-                                            value={quantities.find(item => item._id === key)?.cantidad || '1'}
+                                            value={quantities.find(item => item._id === key)?.cantidad}
                                             onChange={(e) => handleQuantityChange(key, e.target.value, getAlmacenById(key).existencias)}
                                             errorMessage={quantityErrors[key] || ''}
                                             isInvalid={!!quantityErrors[key]}
@@ -466,8 +463,7 @@ const EditarPractica = () => {
                                             label={`Cantidad para ${getEquipoLabById(key).nombre}`}
                                             type="number"
                                             variant='bordered'
-                                            min={1}
-                                            value={quantities.find(item => item._id === key)?.cantidad || '1'}
+                                            value={quantities.find(item => item._id === key)?.cantidad}
                                             onChange={(e) => handleQuantityChange(key, e.target.value, getEquipoLabById(key).cantidad)}
                                             errorMessage={quantityErrors[key] || ''}
                                             isInvalid={!!quantityErrors[key]}
@@ -493,8 +489,7 @@ const EditarPractica = () => {
                                             label={`Cantidad para ${getEquipoTallerById(key).nombre}`}
                                             type="number"
                                             variant='bordered'
-                                            min={1}
-                                            value={quantities.find(item => item._id === key)?.cantidad || '1'}
+                                            value={quantities.find(item => item._id === key)?.cantidad }
                                             onChange={(e) => handleQuantityChange(key, e.target.value, 1)}
                                             errorMessage={quantityErrors[key] || ''}
                                             isInvalid={!!quantityErrors[key]}

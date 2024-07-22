@@ -134,10 +134,10 @@ export class PracticasService {
         const equipoTaller = equiposTaller.find(mat => mat._id.toString() === material._id.toString());
         const newMaterial = {
           nombre: materialAlmacen?.nombre || materialLab?.nombre || aditivo?.nombre || equipoLab?.nombre || equipoTaller?.nombre,
-          cantidad:material.cantidad,
-          _id:material._id
+          cantidad: material.cantidad,
+          _id: material._id
         }
-        
+
         return newMaterial
       }).filter(material => material !== undefined);
 
@@ -149,14 +149,14 @@ export class PracticasService {
 
     return practicasConMateriales;
   }
-  async findPracticasByDocente(id:string) {
+  async findPracticasByDocente(id: string) {
     const materialesAlmacen = await this.materialesAlmacenModel.find().lean().exec() as MaterialAlmacen[];
     const materialesLab = await this.materialesLabModel.find().lean().exec() as MaterialLab[];
     const aditivos = await this.aditivosModel.find().lean().exec() as Aditivo[];
     const equiposLab = await this.equiposLabModel.find().lean().exec() as EquiposLaboratorio[];
     const equiposTaller = await this.equiposTallerModel.find().lean().exec() as EquiposTallerInterface[];
 
-    const practicas = await this.practicasModel.find({profesor:id})
+    const practicas = await this.practicasModel.find({ profesor: id })
       .populate('asignatura', 'nombre')
       .populate('profesor', 'nombre')
       .sort({ createdAt: -1 })
@@ -172,10 +172,10 @@ export class PracticasService {
         const equipoTaller = equiposTaller.find(mat => mat._id.toString() === material._id.toString());
         const newMaterial = {
           nombre: materialAlmacen?.nombre || materialLab?.nombre || aditivo?.nombre || equipoLab?.nombre || equipoTaller?.nombre,
-          cantidad:material.cantidad,
-          _id:material._id
+          cantidad: material.cantidad,
+          _id: material._id
         }
-        
+
         return newMaterial
       }).filter(material => material !== undefined);
 
@@ -211,10 +211,10 @@ export class PracticasService {
 
         const newMaterial = {
           nombre: materialAlmacen?.nombre || materialLab?.nombre || aditivo?.nombre || equipoLab?.nombre || equipoTaller?.nombre,
-          cantidad:material.cantidad,
-          _id:material._id
+          cantidad: material.cantidad,
+          _id: material._id
         }
-        
+
         return newMaterial
       }).filter(material => material !== undefined);
 
@@ -234,7 +234,7 @@ export class PracticasService {
     const equiposLab = await this.equiposLabModel.find().lean().exec() as EquiposLaboratorio[];
     const equiposTaller = await this.equiposTallerModel.find().lean().exec() as EquiposTallerInterface[];
 
-    const practicas = await this.practicasModel.find({ cuatrimestre: cuatrimestre, grupo: grupo,estado:"ACTIVO" })
+    const practicas = await this.practicasModel.find({ cuatrimestre: cuatrimestre, grupo: grupo, estado: "ACTIVO" })
       .populate('asignatura', 'nombre')
       .populate('profesor', 'nombre')
       .sort({ createdAt: -1 })
@@ -251,10 +251,10 @@ export class PracticasService {
 
         const newMaterial = {
           nombre: materialAlmacen?.nombre || materialLab?.nombre || aditivo?.nombre || equipoLab?.nombre || equipoTaller?.nombre,
-          cantidad:material.cantidad,
-          _id:material._id
+          cantidad: material.cantidad,
+          _id: material._id
         }
-        
+
         return newMaterial
       }).filter(material => material !== undefined);
 
@@ -268,8 +268,102 @@ export class PracticasService {
   }
 
 
-  update(id: string, updatePracticaDto: UpdatePracticaDto) {
-    return this.practicasModel.findByIdAndUpdate(id, updatePracticaDto);
+  async update(id: string, updatePracticaDto: UpdatePracticaDto) {
+    const { materiales } = updatePracticaDto;
+    const materialesAlmacen = await this.materialesAlmacenModel.find();
+    const materialesLab = await this.materialesLabModel.find();
+    const aditivos = await this.aditivosModel.find();
+    const equiposLab = await this.equiposLabModel.find();
+    const equiposTaller = await this.equiposTallerModel.find();
+    try {
+      materiales.map((material: MaterialPracticas) => {
+        equiposTaller.map((equipo) => {
+          if (equipo._id.toString() === material._id.toString()) {
+            if (material.cantidad === 0) {
+              throw new ConflictException(`La cantidad en ${equipo.nombre} minima es de 1.`);
+            }
+            if (equipo.estado === "INACTIVO") {
+              throw new ConflictException(`Lo sentimos, en este momento el equipo ${equipo.nombre} se encuentra inactivo.`);
+            }
+
+            if (equipo.enUso) {
+              throw new ConflictException(`Lo sentimos en este momento el equipo ${equipo.nombre} no esta disponible.`);
+            }
+
+          }
+        });
+        equiposLab.map((equipo) => {
+          if (equipo._id.toString() === material._id.toString()) {
+            if (material.cantidad === 0) {
+              throw new ConflictException(`La cantidad en ${equipo.nombre} minima es de 1.`);
+            }
+            if (equipo.cantidad === 0) {
+              throw new ConflictException(`Lo sentimos, en este momento no contamos con unidades disponibles en ${equipo.nombre}`);
+            }
+
+            if (equipo.cantidad < material.cantidad) {
+              throw new ConflictException(`La catidad solicitada para el material ${equipo.nombre} exede el limite.`);
+            }
+
+          }
+        });
+        aditivos.map((aditivo) => {
+          if (aditivo._id.toString() === material._id.toString()) {
+            if (material.cantidad === 0) {
+              throw new ConflictException(`La cantidad en ${aditivo.nombre} minima es de 1.`);
+            }
+            if (aditivo.cantidad === 0) {
+              throw new ConflictException(`Lo sentimos, en este momento no contamos con unidades disponibles en ${aditivo.nombre}`);
+            }
+
+            if (aditivo.cantidad < material.cantidad) {
+              throw new ConflictException(`La catidad solicitada para el material ${aditivo.nombre} exede el limite.`);
+            }
+
+          }
+        });
+
+        materialesLab.map(matLab => {
+          if (matLab.id.toString() === material._id.toString()) {
+            if (material.cantidad === 0) {
+              throw new ConflictException(`La cantidad en ${matLab.nombre} minima es de 1.`);
+            }
+            if (matLab.existencias === 0) {
+              throw new ConflictException(`Lo sentimos, en este momento no contamos con unidades disponibles en ${matLab.nombre}`);
+            }
+
+            if (matLab.existencias < material.cantidad) {
+              throw new ConflictException(`La catidad solicitada para el material ${matLab.nombre} exede el limite.`);
+            }
+
+          }
+        });
+
+        materialesAlmacen.map(alm => {
+          if (alm.id.toString() === material._id.toString()) {
+            if (material.cantidad === 0) {
+              throw new ConflictException(`La cantidad en ${alm.nombre} minima es de 1.`);
+            }
+            if (alm.existencias === 0) {
+              throw new ConflictException(`Lo sentimos, en este momento no contamos con unidades disponibles en ${alm.nombre}`);
+            }
+
+            if (alm.existencias < material.cantidad) {
+              throw new ConflictException(`La catidad solicitada para el material ${alm.nombre} exede el limite.`);
+            }
+
+          }
+        })
+      })
+      // return this.practicasModel.create(createPracticaDto);
+      return this.practicasModel.findByIdAndUpdate(id, updatePracticaDto);
+
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Error interno del servidor', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   remove(id: string) {

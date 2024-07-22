@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
+// https://bejewelled-flan-378a6d.netlify.app
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
