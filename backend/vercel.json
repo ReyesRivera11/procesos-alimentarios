@@ -18,7 +18,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "http://localhost:5173"
+          "value": "https://bejewelled-flan-378a6d.netlify.app"
         },
         {
           "key": "Access-Control-Allow-Methods",
