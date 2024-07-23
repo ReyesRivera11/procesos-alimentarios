@@ -57,7 +57,7 @@ export class PrestamosService {
 
           const entity = aditivo || equipoLab || equipoTaller || materialAlmacen || materialLab;
 
-          throw new NotFoundException(`El material ${entity?.nombre || materialRequerido._id} no se encuentra requerido para esta práctica.`);
+          throw new NotFoundException(`El material ${entity?.nombre || materialRequerido._id} no se encuentra requerido para está práctica.`);
         }
       }
 
@@ -83,7 +83,7 @@ export class PrestamosService {
             if (materialPractica.cantidad < material.cantidad) {
               // console.log(`Verifying material: ${entity.nombre}, available quantity: ${materialPractica.cantidad}`);
 
-              throw new ConflictException(`Lo sentimos la cantidad solicitada en ${entity.nombre} exede el limite solicitado por el docente.`);
+              throw new ConflictException(`Lo sentimos la cantidad solicitada en ${entity.nombre} excede el límite solicitado por el docente.`);
             }
           }
         });
@@ -96,7 +96,7 @@ export class PrestamosService {
               throw new ConflictException(`Lo sentimos, en este momento el equipo ${equipo.nombre} se encuentra inactivo.`);
             }
             if (equipo.enUso) {
-              throw new ConflictException(`Lo sentimos en este momento el equipo ${equipo.nombre} no esta disponible.`);
+              throw new ConflictException(`Lo sentimos en este momento el equipo ${equipo.nombre} no está disponible.`);
             }
           }
         });
@@ -107,7 +107,7 @@ export class PrestamosService {
               throw new ConflictException(`Lo sentimos, en este momento no contamos con unidades disponibles en ${equipo.nombre}.`);
             }
             if (equipo.cantidad < material.cantidad) {
-              throw new ConflictException(`La cantidad solicitada para el material ${equipo.nombre} exede el limite.`);
+              throw new ConflictException(`La cantidad solicitada para el material ${equipo.nombre} excede el límite.`);
             }
           }
         });
@@ -118,7 +118,7 @@ export class PrestamosService {
               throw new ConflictException(`Lo sentimos, en este momento no contamos con unidades disponibles en ${aditivo.nombre}`);
             }
             if (aditivo.cantidad < material.cantidad) {
-              throw new ConflictException(`La cantidad solicitada para el material ${aditivo.nombre} exede el limite.`);
+              throw new ConflictException(`La cantidad solicitada para el material ${aditivo.nombre} excede el límite.`);
             }
           }
         });
@@ -129,7 +129,7 @@ export class PrestamosService {
               throw new ConflictException(`Lo sentimos, en este momento no contamos con unidades disponibles en ${matLab.nombre}`);
             }
             if (matLab.existencias < material.cantidad) {
-              throw new ConflictException(`La cantidad solicitada para el material ${matLab.nombre} exede el limite.`);
+              throw new ConflictException(`La cantidad solicitada para el material ${matLab.nombre} excede el límite.`);
             }
           }
         });
@@ -140,7 +140,7 @@ export class PrestamosService {
               throw new ConflictException(`Lo sentimos, en este momento no contamos con unidades disponibles en ${alm.nombre}`);
             }
             if (alm.existencias < material.cantidad) {
-              throw new ConflictException(`La cantidad solicitada para el material ${alm.nombre} exede el limite.`);
+              throw new ConflictException(`La cantidad solicitada para el material ${alm.nombre} excede el límite.`);
             }
           }
         });
@@ -171,7 +171,7 @@ export class PrestamosService {
       const prestamo = await this.prestamosModel.findById(acceptData.id);
       const equiposLab = await this.equiposLabModel.find();
       const equiposTaller = await this.equiposTallerModel.find();
-      if (!prestamo) throw new NotFoundException("El prestamo no fue encontrado.");
+      if (!prestamo) throw new NotFoundException("El préstamo no fue encontrado.");
 
       if (acceptData.aceptado) {
         prestamo.materiales.map((material: Material) => {
@@ -183,7 +183,7 @@ export class PrestamosService {
               }
 
               if (equipo.enUso) {
-                throw new ConflictException(`Lo sentimos en este momento el equipo ${equipo.nombre} no esta disponible.`);
+                throw new ConflictException(`Lo sentimos en este momento el equipo ${equipo.nombre} no está disponible.`);
               }
 
             }
@@ -243,7 +243,6 @@ export class PrestamosService {
           equiposTaller.map((equipo) => {
             if (equipo._id.toString() === material._id.toString()) {
               if (!equipo.enUso) {
-                console.log("hOLA")
                 const updatedQuantity = async () => {
                   await this.equiposTallerModel.findByIdAndUpdate(material._id, {
                     enUso: true,
@@ -341,7 +340,7 @@ export class PrestamosService {
       const equiposTaller = await this.equiposTallerModel.find();
       const prestamo = await this.prestamosModel.findById(confirmData.id);
 
-      if (!prestamo) throw new NotFoundException("El prestamo no fue encontrado.");
+      if (!prestamo) throw new NotFoundException("El préstamo no fue encontrado.");
 
       if (confirmData.devuelto) {
         prestamo.materiales.map((material: Material) => {

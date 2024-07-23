@@ -103,7 +103,7 @@ const Prestamos = () => {
         <div className='w-full  p-5'>
             <Toaster richColors />
             <div className="w-full mb-2">
-                <div className="flex md:flex-row w-full flex-col justify-between items-center px-20 m-auto gap-3">
+                <div className="flex md:flex-row w-full flex-col justify-between items-end md:px-20 m-auto gap-3">
                     <div className="flex md:flex-row flex-col w-full md:gap-10 gap-3">
                         <p className="text-center text-2xl font-bold ">Solicitudes</p>
                         <Input
@@ -115,7 +115,7 @@ const Prestamos = () => {
                             onChange={onSearchChange}
                         />
                     </div>
-                    <div className="flex  justify-end mx-auto my-2 gap-3">
+                    <div className="flex w-full  justify-end mx-auto my-2 gap-3">
                         <Dropdown>
                             <DropdownTrigger className=" sm:flex">
                                 <Button variant="flat">
@@ -197,7 +197,7 @@ const Prestamos = () => {
                                     Sin resultados.
                                 </p>
                             </div> :
-                            <div className="w-full px-20">
+                            <div className="w-full md:px-20">
                                 <Table
                                     aria-label="Example table with client side pagination"
                                     bottomContent={
@@ -220,7 +220,7 @@ const Prestamos = () => {
                                 >
                                     <TableHeader >
                                         <TableColumn className="text-center font-bold">
-                                            Practica
+                                            Práctica
                                         </TableColumn>
                                         <TableColumn className="text-center font-bold">
                                             Fecha de solicitud

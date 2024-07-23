@@ -247,7 +247,7 @@ const AlumnosLista = () => {
                             >
                                 <TableHeader >
                                     <TableColumn className="text-center font-bold">
-                                        Matricula
+                                        Matrícula
                                     </TableColumn>
                                     <TableColumn className="text-center font-bold">
                                         Nombre

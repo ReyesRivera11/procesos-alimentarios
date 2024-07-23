@@ -6,7 +6,6 @@ import UthhLogo from "../assets/images/uthh-logo.png";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
 
 import { getPracticasById } from '../api/practicas';
-import { useAuth } from '../context/auth-context';
 
 const ModalPracticas = ({ id }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();

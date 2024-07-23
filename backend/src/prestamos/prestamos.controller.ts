@@ -56,7 +56,7 @@ export class PracticasController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const res = await this.prestamosServices.findOne(id);
-    if(!res) throw new NotFoundException("El prestamo no se encuentra registrado o fue borrado.")
+    if(!res) throw new NotFoundException("El préstamo no se encuentra registrado o fue borrado.")
     return res;
   }
 
@@ -64,7 +64,7 @@ export class PracticasController {
   @Auth(Role.ALUMNO)
   async findByAlumno(@Param('id') id: string) {
     const res = await this.prestamosServices.findByAlumno(id);
-    if(!res) throw new NotFoundException("El prestamo no se encuentra registrado o fue borrado.")
+    if(!res) throw new NotFoundException("El préstamo no se encuentra registrado o fue borrado.")
     return res;
   }
 
@@ -72,7 +72,7 @@ export class PracticasController {
   @Auth(Role.ADMIN)
   async update(@Param('id') id: string, @Body() updatePracticaDto: UpdatePracticaDto) {
     const res = await this.prestamosServices.update(id, updatePracticaDto);
-    if (!res) throw new NotFoundException("La practica no se encuentra registrada.");
+    if (!res) throw new NotFoundException("La práctica no se encuentra registrada.");
     return res;
   }
 
@@ -80,7 +80,7 @@ export class PracticasController {
   @Auth(Role.ADMIN)
   async remove(@Param('id') id: string) {
     const res = await  this.prestamosServices.remove(id);
-    if(!res) throw new NotFoundException("El prestamo no se encuentra registrado.");
+    if(!res) throw new NotFoundException("El préstamo no se encuentra registrado.");
     return res;
   }
 
@@ -94,7 +94,7 @@ export class PracticasController {
   @Auth(Role.ADMIN)
   async confirmDelivery(@Body() confirmData: ConfirmDeliver) {
       const res = await this.prestamosServices.confirmDeliver(confirmData);
-      if(!res) throw new NotFoundException("El prestamo no existe.");
+      if(!res) throw new NotFoundException("El préstamo no existe.");
       return res;
   }
 
@@ -102,7 +102,7 @@ export class PracticasController {
   @Auth(Role.ADMIN)
   async confirmReturn(@Body() confirmData: ConfirmReturn) {
       const res = await this.prestamosServices.confirmReturn(confirmData);
-      if(!res) throw new NotFoundException("El prestamo no existe.");
+      if(!res) throw new NotFoundException("El préstamo no existe.");
       return res;
   }
 }

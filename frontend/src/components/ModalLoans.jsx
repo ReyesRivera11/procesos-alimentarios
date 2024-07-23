@@ -125,7 +125,7 @@ const ModalLoans = ({ id }) => {
                                     </div>
                                     <div>
                                         <label className='font-semibold'>Devolución</label>
-                                        <p className='border border-gray-300 p-1 rounded-md  uppercase'>{data?.entregado ? "Devuelto" : "Sin devolver"}</p>
+                                        <p className='border border-gray-300 p-1 rounded-md  uppercase'>{data?.devuelto ? "Devuelto" : "Sin devolver"}</p>
                                     </div>
 
                                 </div>

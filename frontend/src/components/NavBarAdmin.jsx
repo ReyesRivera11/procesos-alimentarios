@@ -70,7 +70,7 @@ const NavBarAdmin = () => {
                                     navigate("/materialesAlmacen");
                                     setFlag(false);
                                 }}>
-                                    Materiales de almacen
+                                    Materiales de almacén
                                 </DropdownItem>
                                 <DropdownItem onClick={() => {
                                     navigate("/equipos-taller");
@@ -98,7 +98,7 @@ const NavBarAdmin = () => {
                                         // radius="sm"
                                         variant="dark"
                                     >
-                                        Prestamos
+                                        Préstamos
                                     </Button>
                                 </DropdownTrigger>
                             </NavbarItem>
@@ -137,7 +137,7 @@ const NavBarAdmin = () => {
                             </DropdownMenu>
                         </Dropdown>
 
-                        <button onClick={signOut} className="p-2 rounded-md" style={{ backgroundColor: styles.backgroundOrange }}>Cerrar sesion</button>
+                        <button onClick={signOut} className="p-2 rounded-md" style={{ backgroundColor: styles.backgroundOrange }}>Cerrar sesión</button>
                     </div>
                 </div>
             )}
@@ -171,7 +171,7 @@ const NavBarAdmin = () => {
                             Materiales de laboratorio
                         </DropdownItem> /equipos-taller
                         <DropdownItem onClick={() => navigate("/materialesAlmacen")}>
-                            Materiales de almacen
+                            Materiales de almacén
                         </DropdownItem>
                         <DropdownItem onClick={() => navigate("/equipos-taller")}>
                             Equipos taller
@@ -192,7 +192,7 @@ const NavBarAdmin = () => {
                                 // radius="sm"
                                 variant="dark"
                             >
-                                Prestamos
+                                Préstamos
                             </Button>
                         </DropdownTrigger>
                     </NavbarItem>
@@ -225,7 +225,7 @@ const NavBarAdmin = () => {
                     onClick={signOut}
                     className="p-2 rounded-md sm:text-xs md:text-[16px]"
                     style={{ backgroundColor: styles.backgroundOrange }}>
-                    Cerrar sesion
+                    Cerrar sesión
                 </button>
             </div>
         </Navbar>

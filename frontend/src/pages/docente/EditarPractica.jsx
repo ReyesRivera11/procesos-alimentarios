@@ -319,7 +319,7 @@ const EditarPractica = () => {
                                 render={({ field }) => <Input
                                     {...field}
                                     type="text"
-                                    label="Practica"
+                                    label="Práctica"
                                     variant='bordered'
                                     isInvalid={Boolean(errors?.practica)}
                                     errorMessage={errors?.practica?.message}
@@ -385,6 +385,7 @@ const EditarPractica = () => {
                                             label={`Cantidad para ${getAditivoById(key).nombre}`}
                                             type="number"
                                             variant='bordered'
+                                            
                                             value={quantities.find(item => item._id === key)?.cantidad }
                                             onChange={(e) => handleQuantityChange(key, e.target.value, getAditivoById(key).cantidad)}
                                             errorMessage={quantityErrors[key] || ''}

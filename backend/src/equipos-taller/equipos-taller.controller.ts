@@ -17,7 +17,7 @@ export class EquiposTallerController {
       const res = await this.equiposTallerService.create(createEquiposTallerDto);
       return res;
     } catch (error) {
-      if (error.code === 11000) throw new ConflictException("El equipo ya esta registrado");
+      if (error.code === 11000) throw new ConflictException("El equipo ya está registrado");
       throw error;
     }
 
@@ -43,7 +43,7 @@ export class EquiposTallerController {
       if (!res) throw new NotFoundException("El equipo no se encuentra registrado.");
       return res;
     } catch (error) {
-      if (error.code === 11000) throw new ConflictException("El equipo ya esta registrado");
+      if (error.code === 11000) throw new ConflictException("El equipo ya está registrado");
       throw error;
     }
   }

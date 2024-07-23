@@ -220,7 +220,7 @@ const LoanList = () => {
                             >
                                 <TableHeader >
                                     <TableColumn className="text-center font-bold">
-                                        Practica
+                                        Práctica
                                     </TableColumn>
                                     <TableColumn className="text-center font-bold">
                                         Fecha de solicitud

@@ -32,9 +32,9 @@ const NavBarDocente = () => {
                     <div className="flex flex-col items-center gap-10 text-white" onClick={() => setFlag(false)}>
                         <NavLink to={"/inicio-docente"}>Inicio</NavLink>
                         <NavLink to={"/cambiar-pass-docente"}>Cambiar contraseña</NavLink>
-                        <NavLink to={"/crear-practica"}>Practica</NavLink>
-                        <NavLink to={"/practicas-docente"}>Practicas</NavLink>
-                        <button onClick={signOut} className="p-2 rounded-md" style={{ backgroundColor: styles.backgroundOrange }}>Cerrar sesion</button>
+                        <NavLink to={"/crear-practica"}>Nueva práctica</NavLink>
+                        <NavLink to={"/practicas-docente"}>Prácticas</NavLink>
+                        <button onClick={signOut} className="p-2 rounded-md" style={{ backgroundColor: styles.backgroundOrange }}>Cerrar sesión</button>
                     </div>
                 </div>
             )}
@@ -42,13 +42,13 @@ const NavBarDocente = () => {
 
                 <NavLink to={"/inicio-docente"}>Inicio</NavLink>
                 <NavLink to={"/cambiar-pass-docente"}>Cambiar contraseña</NavLink>
-                <NavLink to={"/crear-practica"}>Practica</NavLink>
-                <NavLink to={"/practicas-docente"}>Practicas</NavLink>
+                <NavLink to={"/crear-practica"}>Nueva práctica</NavLink>
+                <NavLink to={"/practicas-docente"}>Prácticas</NavLink>
                 <button
                     onClick={signOut}
                     className="p-2 rounded-md sm:text-xs md:text-[16px]"
                     style={{ backgroundColor: styles.backgroundOrange }}>
-                    Cerrar sesion
+                    Cerrar sesión
                 </button>
             </div>
         </Navbar>

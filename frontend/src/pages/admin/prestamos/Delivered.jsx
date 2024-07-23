@@ -142,7 +142,7 @@ const Delivered = () => {
                                     className="text-center font-bold text-sm"
                                     key="nombrePractica"
                                 >
-                                    Practica
+                                    Práctica
                                 </TableColumn>
                                 <TableColumn
                                     className="text-center font-bold text-sm"

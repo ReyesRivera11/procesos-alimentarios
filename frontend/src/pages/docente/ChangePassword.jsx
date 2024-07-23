@@ -25,7 +25,7 @@ const ChangePasswordDocente = () => {
         try {
             const token = localStorage.getItem('token');
             
-            const res = await changePasswordDocente(user._id, values);
+            const res = await changePasswordDocente(user._id, values,token);
             if (res) {
                 toast.success("Contraseña actualizada.");
                 setTimeout(()=>{

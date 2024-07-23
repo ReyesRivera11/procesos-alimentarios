@@ -15,7 +15,7 @@ export class AlumnosController {
     try {
       return await this.alumnosService.create(createAlumnoDto);
     } catch (error) {
-      if (error.code === 11000) throw new ConflictException("La matricula ya esta en uso");
+      if (error.code === 11000) throw new ConflictException("La matrícula ya estaá en uso");
       throw error;
     }
   }
@@ -42,7 +42,7 @@ export class AlumnosController {
       if (!res) throw new NotFoundException("El alumno no se encuentra registrado");
       return res;
     } catch (error) {
-      if (error.code === 11000) throw new ConflictException("La matricula ya esta en uso");
+      if (error.code === 11000) throw new ConflictException("La matrícula ya está en uso");
       throw error;
     }
 

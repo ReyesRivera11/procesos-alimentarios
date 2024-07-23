@@ -14,4 +14,8 @@ export const changePassword = (id, token, password) => axios.patch(`/alumnos/cha
     },
 });
 
-export const changePasswordDocente = (id, password) => axios.patch(`/profesores/change-pass-docente/${id}`, password);
+export const changePasswordDocente = (id, password,token) => axios.patch(`/profesores/change-pass-docente/${id}`, password, {
+    headers: {
+        "Authorization": `Bearer ${token}`,
+    },
+});

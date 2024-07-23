@@ -239,7 +239,7 @@ const CrearPractica = () => {
 
                         <Input
                             type="text"
-                            label="Practica"
+                            label="Práctica"
                             variant='bordered'
                             isInvalid={Boolean(errors?.practica)}
                             errorMessage={errors?.practica?.message}

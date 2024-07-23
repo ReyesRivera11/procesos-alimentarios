@@ -41,7 +41,7 @@ export class PracticasService {
             }
 
             if (equipo.enUso) {
-              throw new ConflictException(`Lo sentimos en este momento el equipo ${equipo.nombre} no esta disponible.`);
+              throw new ConflictException(`Lo sentimos, en este momento el equipo ${equipo.nombre} no esta disponible.`);
             }
 
           }
@@ -54,7 +54,7 @@ export class PracticasService {
             }
 
             if (equipo.cantidad < material.cantidad) {
-              throw new ConflictException(`La catidad solicitada para el material ${equipo.nombre} exede el limite.`);
+              throw new ConflictException(`La catidad solicitada para el material ${equipo.nombre} excede el limite.`);
             }
 
           }
@@ -67,7 +67,7 @@ export class PracticasService {
             }
 
             if (aditivo.cantidad < material.cantidad) {
-              throw new ConflictException(`La catidad solicitada para el material ${aditivo.nombre} exede el limite.`);
+              throw new ConflictException(`La catidad solicitada para el material ${aditivo.nombre} excede el limite.`);
             }
 
           }
@@ -81,7 +81,7 @@ export class PracticasService {
             }
 
             if (matLab.existencias < material.cantidad) {
-              throw new ConflictException(`La catidad solicitada para el material ${matLab.nombre} exede el limite.`);
+              throw new ConflictException(`La catidad solicitada para el material ${matLab.nombre} excede el limite.`);
             }
 
           }
@@ -95,7 +95,7 @@ export class PracticasService {
             }
 
             if (alm.existencias < material.cantidad) {
-              throw new ConflictException(`La catidad solicitada para el material ${alm.nombre} exede el limite.`);
+              throw new ConflictException(`La catidad solicitada para el material ${alm.nombre} excede el limite.`);
             }
 
           }
@@ -281,14 +281,14 @@ export class PracticasService {
         equiposTaller.map((equipo) => {
           if (equipo._id.toString() === material._id.toString()) {
             if (material.cantidad === 0) {
-              throw new ConflictException(`La cantidad en ${equipo.nombre} minima es de 1.`);
+              throw new ConflictException(`La cantidad en ${equipo.nombre} mínima es de 1.`);
             }
             if (equipo.estado === "INACTIVO") {
               throw new ConflictException(`Lo sentimos, en este momento el equipo ${equipo.nombre} se encuentra inactivo.`);
             }
 
             if (equipo.enUso) {
-              throw new ConflictException(`Lo sentimos en este momento el equipo ${equipo.nombre} no esta disponible.`);
+              throw new ConflictException(`Lo sentimos en este momento el equipo ${equipo.nombre} no está disponible.`);
             }
 
           }
@@ -296,14 +296,14 @@ export class PracticasService {
         equiposLab.map((equipo) => {
           if (equipo._id.toString() === material._id.toString()) {
             if (material.cantidad === 0) {
-              throw new ConflictException(`La cantidad en ${equipo.nombre} minima es de 1.`);
+              throw new ConflictException(`La cantidad en ${equipo.nombre} mínima es de 1.`);
             }
             if (equipo.cantidad === 0) {
               throw new ConflictException(`Lo sentimos, en este momento no contamos con unidades disponibles en ${equipo.nombre}`);
             }
 
             if (equipo.cantidad < material.cantidad) {
-              throw new ConflictException(`La catidad solicitada para el material ${equipo.nombre} exede el limite.`);
+              throw new ConflictException(`La catidad solicitada para el material ${equipo.nombre} excede el límite.`);
             }
 
           }
@@ -311,14 +311,14 @@ export class PracticasService {
         aditivos.map((aditivo) => {
           if (aditivo._id.toString() === material._id.toString()) {
             if (material.cantidad === 0) {
-              throw new ConflictException(`La cantidad en ${aditivo.nombre} minima es de 1.`);
+              throw new ConflictException(`La cantidad en ${aditivo.nombre} mínima es de 1.`);
             }
             if (aditivo.cantidad === 0) {
               throw new ConflictException(`Lo sentimos, en este momento no contamos con unidades disponibles en ${aditivo.nombre}`);
             }
 
             if (aditivo.cantidad < material.cantidad) {
-              throw new ConflictException(`La catidad solicitada para el material ${aditivo.nombre} exede el limite.`);
+              throw new ConflictException(`La catidad solicitada para el material ${aditivo.nombre} excede el límite.`);
             }
 
           }
@@ -327,14 +327,14 @@ export class PracticasService {
         materialesLab.map(matLab => {
           if (matLab.id.toString() === material._id.toString()) {
             if (material.cantidad === 0) {
-              throw new ConflictException(`La cantidad en ${matLab.nombre} minima es de 1.`);
+              throw new ConflictException(`La cantidad en ${matLab.nombre} mínima es de 1.`);
             }
             if (matLab.existencias === 0) {
               throw new ConflictException(`Lo sentimos, en este momento no contamos con unidades disponibles en ${matLab.nombre}`);
             }
 
             if (matLab.existencias < material.cantidad) {
-              throw new ConflictException(`La catidad solicitada para el material ${matLab.nombre} exede el limite.`);
+              throw new ConflictException(`La catidad solicitada para el material ${matLab.nombre} excede el límite.`);
             }
 
           }
@@ -343,14 +343,14 @@ export class PracticasService {
         materialesAlmacen.map(alm => {
           if (alm.id.toString() === material._id.toString()) {
             if (material.cantidad === 0) {
-              throw new ConflictException(`La cantidad en ${alm.nombre} minima es de 1.`);
+              throw new ConflictException(`La cantidad en ${alm.nombre} mínima es de 1.`);
             }
             if (alm.existencias === 0) {
               throw new ConflictException(`Lo sentimos, en este momento no contamos con unidades disponibles en ${alm.nombre}`);
             }
 
             if (alm.existencias < material.cantidad) {
-              throw new ConflictException(`La catidad solicitada para el material ${alm.nombre} exede el limite.`);
+              throw new ConflictException(`La catidad solicitada para el material ${alm.nombre} excede el límite.`);
             }
 
           }

@@ -13,7 +13,7 @@ export class AdminController {
       const res = await this.adminService.create(createAdminDto);
       return res;
     } catch (error) {
-      if(error.code === 11000) throw new ConflictException("El correo ya esta en uso.");
+      if(error.code === 11000) throw new ConflictException("El correo ya está en uso.");
       console.log(error)
     }
   }

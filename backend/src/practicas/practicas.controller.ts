@@ -39,7 +39,7 @@ export class PracticasController {
   @Auth(Role.DOCENTE)
   async update(@Param('id') id: string, @Body() updatePracticaDto: UpdatePracticaDto) {
     const res = await this.practicasService.update(id, updatePracticaDto);
-    if(!res) throw new NotFoundException("La practica no existe.")
+    if(!res) throw new NotFoundException("La práctica no existe.")
     return res;
   }
 
@@ -47,14 +47,14 @@ export class PracticasController {
   @Auth(Role.DOCENTE)
   async updateEstado(@Param('id') id: string, @Body() updatePracticaDto: UpdatePracticaDto) {
     const res = await this.practicasService.updateEstado(id, updatePracticaDto);
-    if(!res) throw new NotFoundException("La practica no existe.")
+    if(!res) throw new NotFoundException("La práctica no existe.")
     return res;
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const res = await this.practicasService.remove(id);
-    if(!res) throw new NotFoundException("La practica no existe.")
+    if(!res) throw new NotFoundException("La práctica no existe.")
     return res;
   }
 }

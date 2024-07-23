@@ -36,7 +36,7 @@ export class MaterialInventarioController {
       if(!res) throw new NotFoundException("El material no se encuentra registrado.");
       return res;
     } catch (error) {
-      if(error.code === 11000) throw new ConflictException("El nombre del material ya esta en uso.");
+      if(error.code === 11000) throw new ConflictException("El nombre del material ya está en uso.");
     }
   }
 

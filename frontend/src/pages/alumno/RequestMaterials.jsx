@@ -167,7 +167,7 @@ const RequestMaterials = () => {
 
                                 <div className="flex flex-col gap-4">
                                     <Select
-                                        label="Practica"
+                                        label="Práctica"
                                         variant='bordered'
                                         isInvalid={errors?.asignatura ? true : false}
                                         errorMessage={errors?.asignatura?.message}
@@ -194,7 +194,7 @@ const RequestMaterials = () => {
                                     />
 
                                     <Input
-                                        label="Docente"
+                                        label="Fecha"
                                         value={practica?.fecha}
                                         variant='bordered'
                                         disabled

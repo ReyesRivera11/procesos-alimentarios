@@ -14,7 +14,7 @@ export class EquiposLabController {
     try {
       return await this.equiposLabService.create(createEquiposLabDto);
     } catch (error) {
-      if (error.code === 11000) throw new ConflictException("El equipo ya esta registrado.");
+      if (error.code === 11000) throw new ConflictException("El equipo ya está registrado.");
       throw error;
     }
   }
@@ -27,7 +27,7 @@ export class EquiposLabController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const res = await this.equiposLabService.findOne(id);
-    if (!res) throw new NotFoundException("El equipo no esta registrado.");
+    if (!res) throw new NotFoundException("El equipo no está registrado.");
     return res;
   }
 
@@ -36,10 +36,10 @@ export class EquiposLabController {
   async update(@Param('id') id: string, @Body() updateEquiposLabDto: UpdateEquiposLabDto) {
     try {
       const res = await this.equiposLabService.update(id, updateEquiposLabDto);
-      if (!res) throw new NotFoundException("El equipo no esta registrado.");
+      if (!res) throw new NotFoundException("El equipo no está registrado.");
       return res;
     } catch (error) {
-      if (error.code === 11000) throw new ConflictException("El equipo ya esta registrado.");
+      if (error.code === 11000) throw new ConflictException("El equipo ya está registrado.");
       throw error;
     }
 
@@ -49,7 +49,7 @@ export class EquiposLabController {
   @Auth(Role.ADMIN)
   async remove(@Param('id') id: string) {
     const res = await this.equiposLabService.remove(id);
-    if (!res) throw new NotFoundException("El equipo no esta registrado.");
+    if (!res) throw new NotFoundException("El equipo no está registrado.");
     return res;
   }
 }

@@ -76,7 +76,7 @@ export class AuthService {
     }
 
     async profile({ sub, role }: { sub: string, role: string }) {
-        if (role !== Role.ALUMNO ) throw new UnauthorizedException("Not authorized")
+        if (role !== Role.ALUMNO ) throw new UnauthorizedException("Usuario no autorizado.")
         return await this.alumnosModel.findById(sub);
     }
 
