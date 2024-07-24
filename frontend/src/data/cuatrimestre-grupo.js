@@ -24,11 +24,9 @@ export const niveles = [
     "TERCERO",
     "CUARTO",
     "QUINTO",
-    "SEPTIMO",
+    "SÉPTIMO",
     "OCTAVO",
     "NOVENO",
-    "DÉCIMO",
-    "DECIMOPRIMERO",
 ];
 
 export const cuatrimestre = [
@@ -37,10 +35,8 @@ export const cuatrimestre = [
     "TERCERO",
     "CUARTO",
     "QUINTO",
-    "SEPTIMO",
+    "SÉPTIMO",
     "OCTAVO",
     "NOVENO",
-    "DÉCIMO",
-    "DECIMOPRIMERO",
 ];
 
