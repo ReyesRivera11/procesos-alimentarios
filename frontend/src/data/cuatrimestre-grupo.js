@@ -27,6 +27,7 @@ export const niveles = [
     "SÉPTIMO",
     "OCTAVO",
     "NOVENO",
+    "DÉCIMO"
 ];
 
 export const cuatrimestre = [
@@ -38,5 +39,6 @@ export const cuatrimestre = [
     "SÉPTIMO",
     "OCTAVO",
     "NOVENO",
+    "DÉCIMO"
 ];
 
