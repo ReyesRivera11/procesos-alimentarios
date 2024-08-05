@@ -18,7 +18,7 @@ import { PracticasModule } from './practicas/practicas.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGODB_URI), AsignaturasModule, ProfesoresModule, AlumnosModule, MaterialLabModule, MaterialInventarioModule, AditivosModule, EquiposTallerModule, EquiposLabModule, PrestamosModule, AuthModule, AdminModule,PracticasModule],
+    MongooseModule.forRoot("mongodb+srv://procesosalimentarios110:procesosalimentarios110@cluster0.fzgzcvx.mongodb.net/procesos?retryWrites=true&w=majority&appName=Cluster0"), AsignaturasModule, ProfesoresModule, AlumnosModule, MaterialLabModule, MaterialInventarioModule, AditivosModule, EquiposTallerModule, EquiposLabModule, PrestamosModule, AuthModule, AdminModule,PracticasModule],
   controllers: [],
   providers: [AppService],
 })
