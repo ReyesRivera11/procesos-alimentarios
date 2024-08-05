@@ -18,7 +18,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://procesos-alimentarios.developers506.com"
+          "value": "https://procesos-alimentarios.netlify.app"
         },
         {
           "key": "Access-Control-Allow-Methods",
